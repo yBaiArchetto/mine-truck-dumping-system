@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="w-full h-full" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>统计查询与报表 · 矿井货车倒矿智能管控系统</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/echarts.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .period-btn.active { background: #0f172a; color: #ffffff; }
+</style>
+</head>
+<body class="w-full h-full overflow-hidden bg-slate-100 text-slate-800">
+<div class="flex w-full h-full">
+<aside class="w-[248px] shrink-0 h-full bg-slate-900 flex flex-col">
+<div class="h-16 shrink-0 flex items-center gap-3 px-5 border-b border-white/10">
+<div class="w-9 h-9 rounded-lg bg-cyan-600 grid place-items-center text-white">
+<iconify-icon icon="mdi:dump-truck" width="22"></iconify-icon>
+</div>
+<div class="leading-tight">
+<p class="text-white text-[13px] font-semibold">矿井货车倒矿</p>
+<p class="text-slate-400 text-[11px]">智能管控系统</p>
+</div>
+</div>
+<nav class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4 px-3 space-y-1">
+<p class="px-3 pb-1 text-[11px] tracking-wider text-slate-500">概览</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="home.html">
+<iconify-icon icon="mdi:view-dashboard-outline" width="18"></iconify-icon>工作台
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="dashboard.html">
+<iconify-icon icon="mdi:chart-areaspline" width="18"></iconify-icon>可视化看板
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">业务管控</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="recognition.html">
+<iconify-icon icon="mdi:car-connected" width="18"></iconify-icon>车牌识别计次
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="vehicles.html">
+<iconify-icon icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>车辆定位管控
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="alarms.html">
+<iconify-icon icon="mdi:alert-outline" width="18"></iconify-icon>告警与复核
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] bg-cyan-600 text-white" href="statistics.html">
+<iconify-icon icon="mdi:chart-bar" width="18"></iconify-icon>统计与报表
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">终端与项目</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="mobile.html">
+<iconify-icon icon="mdi:cellphone" width="18"></iconify-icon>移动端 H5
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="project.html">
+<iconify-icon icon="mdi:clipboard-check-outline" width="18"></iconify-icon>项目实施与验收
+      </a>
+</nav>
+<div class="p-3 border-t border-white/10">
+<div class="rounded-lg bg-white/5 p-3">
+<p class="text-[11px] text-slate-400 leading-relaxed">内网部署 · 演示数据<br/>需求基线草案 V0.9</p>
+</div>
+</div>
+</aside>
+<div class="flex-1 min-w-0 h-full flex flex-col">
+<header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+<div>
+<h1 class="text-[15px] font-semibold text-slate-900">统计查询与报表</h1>
+<p class="text-[12px] text-slate-500">多维度作业量统计、班次对比与报表导出</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+<iconify-icon icon="mdi:information-outline" width="14"></iconify-icon>演示数据
+        </span>
+<div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white grid place-items-center text-[12px]">管</div>
+<div class="leading-tight">
+<p class="text-[12px] font-medium text-slate-800">系统管理员</p>
+<p class="text-[11px] text-slate-500">调度中心</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden p-6 space-y-5">
+<!-- 周期与筛选 -->
+<section class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+<button class="period-btn active rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-period="day">日报</button>
+<button class="period-btn rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-period="week">周报</button>
+<button class="period-btn rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-period="month">月报</button>
+</div>
+<div class="flex flex-wrap items-end gap-3">
+<label class="block">
+<span class="text-[12px] text-slate-500">点位</span>
+<select class="mt-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] focus:outline-none focus:border-cyan-500">
+<option>全部点位</option>
+<option>1 号卸矿平台</option>
+<option>2 号计量点</option>
+<option>3 号排土点</option>
+<option>北侧装车点</option>
+</select>
+</label>
+<label class="block">
+<span class="text-[12px] text-slate-500">班次</span>
+<select class="mt-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] focus:outline-none focus:border-cyan-500">
+<option>全部班次</option>
+<option>白班 08:00-16:00</option>
+<option>中班 16:00-24:00</option>
+<option>夜班 00:00-08:00</option>
+</select>
+</label>
+<label class="block">
+<span class="text-[12px] text-slate-500">车队</span>
+<select class="mt-1.5 rounded-lg border border-slate-200 px-3 py-2 text-[13px] focus:outline-none focus:border-cyan-500">
+<option>全部车队</option>
+<option>一车队</option>
+<option>二车队</option>
+</select>
+</label>
+<button class="rounded-lg bg-slate-900 text-white text-[13px] px-4 py-2 hover:bg-slate-800" id="genBtn">生成统计</button>
+</div>
+</div>
+</section>
+<!-- 期间指标 -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">期间倒矿车次</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none"><span id="kpiTrips">386</span><span class="text-[12px] text-slate-500 ml-1 font-normal">车</span></p>
+<p class="mt-1.5 text-[11px] text-emerald-600" id="kpiTripsSub">环比前一日 +4.2%</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">平均单车作业时长</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none"><span id="kpiDuration">26</span><span class="text-[12px] text-slate-500 ml-1 font-normal">分钟</span></p>
+<p class="mt-1.5 text-[11px] text-slate-500">含排队等待时间</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">平均计量净重</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none"><span id="kpiWeight">38.6</span><span class="text-[12px] text-slate-500 ml-1 font-normal">吨/车</span></p>
+<p class="mt-1.5 text-[11px] text-slate-500">来源于 2 号计量点</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">车辆利用率</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none"><span id="kpiUsage">84</span><span class="text-[12px] text-slate-500 font-normal">%</span></p>
+<p class="mt-1.5 text-[11px] text-slate-500">在册 45 台 / 出勤 38 台</p>
+</div>
+</section>
+<!-- 图表区 -->
+<section class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+<div class="xl:col-span-2 rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900" id="trendTitle">各时段倒矿车次（日报）</h2>
+<p class="text-[11px] text-slate-500">单位：车次 / 次</p>
+</div>
+</div>
+<div class="mt-2 w-full h-[260px]" id="trendChart"></div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">各点位作业量占比</h2>
+<p class="text-[11px] text-slate-500">单位：车次</p>
+<div class="mt-2 w-full h-[260px]" id="pieChart"></div>
+</div>
+</section>
+<section class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">各班次作业量对比</h2>
+<p class="text-[11px] text-slate-500">单位：车次 · 白班 08:00-16:00 / 中班 16:00-24:00 / 夜班 00:00-08:00</p>
+<div class="mt-2 w-full h-[240px]" id="shiftChart"></div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">车辆作业量 TOP 10</h2>
+<p class="text-[11px] text-slate-500">单位：车次</p>
+<div class="mt-2 w-full h-[240px]" id="topChart"></div>
+</div>
+</section>
+<!-- 报表清单 -->
+<section class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-slate-100">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">报表清单</h2>
+<p class="text-[11px] text-slate-500">按周期生成统计报表，支持导出留档（演示环境不生成文件）</p>
+</div>
+<button class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-[12px] text-slate-600 hover:bg-slate-50" id="exportAllBtn">
+<iconify-icon icon="mdi:file-export-outline" width="14"></iconify-icon>批量导出
+          </button>
+</div>
+<div class="overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">报表名称</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">统计周期</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">生成时间</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">格式</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">操作</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100" id="reportBody">
+<tr class="hover:bg-slate-50/70" data-period="day">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">倒矿作业日报（全矿）</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-15</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:45</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel / PDF</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-period="day">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">车牌识别与计次日报</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-15</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:45</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-period="day">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">告警与复核日报</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-15</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:45</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+<tr class="hidden hover:bg-slate-50/70" data-period="week">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">倒矿作业周报（第 42 周）</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-09 至 10-15</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">10-15 17:00</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel / PDF</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+<tr class="hidden hover:bg-slate-50/70" data-period="week">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">车辆定位与超限周报</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-09 至 10-15</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">10-15 17:00</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+<tr class="hidden hover:bg-slate-50/70" data-period="month">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">倒矿作业月报（2026 年 10 月）</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-01 至 10-31</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">10-31 08:00</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel / PDF</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+<tr class="hidden hover:bg-slate-50/70" data-period="month">
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">月度绩效与车辆利用率统计</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2026-10-01 至 10-31</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">10-31 08:00</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">Excel</td>
+<td class="px-5 py-3"><button class="export-btn text-[12px] text-cyan-700 hover:underline">导出</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<p class="text-[11px] text-slate-400 pb-2">本页统计数据为原型演示数据，仅用于说明统计维度与交互方式。</p>
+</main>
+</div>
+</div>
+<div class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] rounded-lg bg-slate-900 px-5 py-3 text-[13px] text-white shadow-lg" id="toast"></div>
+<script>
+  var toast = document.getElementById('toast');
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.remove('hidden');
+    setTimeout(function () { toast.classList.add('hidden'); }, 2400);
+  }
+
+  var trendChart = echarts.init(document.getElementById('trendChart'));
+  var shiftChart = echarts.init(document.getElementById('shiftChart'));
+
+  var periodData = {
+    day: {
+      title: '各时段倒矿车次（日报）',
+      x: ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
+      trips: [41, 58, 47, 62, 74, 66, 28, 10],
+      scans: [43, 60, 49, 64, 76, 68, 29, 11],
+      kpi: { trips: '386', sub: '环比前一日 +4.2%', duration: '26', weight: '38.6', usage: '84' },
+      shift: [
+        { name: '白班', trips: 168, scans: 172 },
+        { name: '中班', trips: 178, scans: 183 },
+        { name: '夜班', trips: 40, scans: 41 }
+      ]
+    },
+    week: {
+      title: '每日倒矿车次（周报）',
+      x: ['10-09', '10-10', '10-11', '10-12', '10-13', '10-14', '10-15'],
+      trips: [342, 356, 318, 371, 364, 370, 386],
+      scans: [352, 366, 329, 381, 375, 380, 396],
+      kpi: { trips: '2507', sub: '环比上一周 +3.1%', duration: '27', weight: '38.4', usage: '86' },
+      shift: [
+        { name: '白班', trips: 1102, scans: 1128 },
+        { name: '中班', trips: 1156, scans: 1180 },
+        { name: '夜班', trips: 249, scans: 255 }
+      ]
+    },
+    month: {
+      title: '每周倒矿车次（月报）',
+      x: ['第 1 周', '第 2 周', '第 3 周', '第 4 周'],
+      trips: [2310, 2456, 2388, 2104],
+      scans: [2378, 2520, 2441, 2160],
+      kpi: { trips: '9258', sub: '环比上月 +2.4%', duration: '28', weight: '38.2', usage: '85' },
+      shift: [
+        { name: '白班', trips: 4102, scans: 4180 },
+        { name: '中班', trips: 4268, scans: 4326 },
+        { name: '夜班', trips: 888, scans: 905 }
+      ]
+    }
+  };
+
+  function renderTrend(key) {
+    var d = periodData[key];
+    document.getElementById('trendTitle').textContent = d.title;
+    trendChart.setOption({
+      grid: { left: 44, right: 16, top: 40, bottom: 28 },
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['倒矿车次', '识别量'], right: 0, top: 0, itemWidth: 12, itemHeight: 8, textStyle: { color: '#64748b', fontSize: 11 } },
+      xAxis: {
+        type: 'category',
+        data: d.x,
+        axisLine: { lineStyle: { color: '#e2e8f0' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#94a3b8', fontSize: 11 }
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: { lineStyle: { color: '#f1f5f9' } },
+        axisLabel: { color: '#94a3b8', fontSize: 11 }
+      },
+      series: [
+        { name: '倒矿车次', type: 'bar', data: d.trips, barWidth: 16, itemStyle: { color: '#0e7490', borderRadius: [4, 4, 0, 0] } },
+        { name: '识别量', type: 'line', data: d.scans, smooth: true, symbolSize: 6, lineStyle: { width: 2, color: '#f59e0b' }, itemStyle: { color: '#f59e0b' } }
+      ]
+    });
+
+    var k = d.kpi;
+    document.getElementById('kpiTrips').textContent = k.trips;
+    document.getElementById('kpiTripsSub').textContent = k.sub;
+    document.getElementById('kpiDuration').textContent = k.duration;
+    document.getElementById('kpiWeight').textContent = k.weight;
+    document.getElementById('kpiUsage').textContent = k.usage;
+
+    shiftChart.setOption({
+      grid: { left: 48, right: 20, top: 34, bottom: 26 },
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['倒矿车次', '识别量'], right: 0, top: 0, itemWidth: 12, itemHeight: 8, textStyle: { color: '#64748b', fontSize: 11 } },
+      xAxis: {
+        type: 'category',
+        data: [d.shift[0].name, d.shift[1].name, d.shift[2].name],
+        axisLine: { lineStyle: { color: '#e2e8f0' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#94a3b8', fontSize: 11 }
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: { lineStyle: { color: '#f1f5f9' } },
+        axisLabel: { color: '#94a3b8', fontSize: 11 }
+      },
+      series: [
+        { name: '倒矿车次', type: 'bar', data: [d.shift[0].trips, d.shift[1].trips, d.shift[2].trips], barWidth: 26, itemStyle: { color: '#0891b2', borderRadius: [4, 4, 0, 0] } },
+        { name: '识别量', type: 'bar', data: [d.shift[0].scans, d.shift[1].scans, d.shift[2].scans], barWidth: 26, itemStyle: { color: '#cbd5e1', borderRadius: [4, 4, 0, 0] } }
+      ]
+    });
+
+    var rows = document.querySelectorAll('#reportBody tr');
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].getAttribute('data-period') === key) {
+        rows[i].classList.remove('hidden');
+      } else {
+        rows[i].classList.add('hidden');
+      }
+    }
+  }
+
+  var periodButtons = document.querySelectorAll('.period-btn');
+  for (var i = 0; i < periodButtons.length; i++) {
+    periodButtons[i].addEventListener('click', function () {
+      for (var j = 0; j < periodButtons.length; j++) {
+        periodButtons[j].classList.remove('active');
+      }
+      this.classList.add('active');
+      renderTrend(this.getAttribute('data-period'));
+    });
+  }
+  renderTrend('day');
+
+  // 点位占比
+  var pieChart = echarts.init(document.getElementById('pieChart'));
+  pieChart.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} 车 ({d}%)' },
+    legend: { bottom: 0, itemWidth: 10, itemHeight: 8, textStyle: { color: '#64748b', fontSize: 11 } },
+    series: [{
+      type: 'pie',
+      radius: ['44%', '68%'],
+      center: ['50%', '44%'],
+      itemStyle: { borderColor: '#ffffff', borderWidth: 2 },
+      label: { color: '#64748b', fontSize: 11, formatter: '{b}\n{c} 车' },
+      labelLine: { length: 8, length2: 8 },
+      data: [
+        { value: 138, name: '1 号卸矿平台', itemStyle: { color: '#0e7490' } },
+        { value: 92, name: '2 号计量点', itemStyle: { color: '#0891b2' } },
+        { value: 82, name: '北侧装车点', itemStyle: { color: '#38bdf8' } },
+        { value: 74, name: '3 号排土点', itemStyle: { color: '#a5b4fc' } }
+      ]
+    }]
+  });
+
+  // TOP 10
+  var topChart = echarts.init(document.getElementById('topChart'));
+  topChart.setOption({
+    grid: { left: 92, right: 46, top: 10, bottom: 10 },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    xAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9' } }, axisLabel: { color: '#94a3b8', fontSize: 10 } },
+    yAxis: {
+      type: 'category',
+      inverse: true,
+      data: ['豫 C·B918 挂', '豫 C·K118 挂', '豫 C·M602 挂', '豫 C·T556 挂', '豫 C·A309 挂', '豫 C·P771 挂', '豫 C·H204 挂', '豫 C·8F23 挂'],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: '#64748b', fontSize: 11 }
+    },
+    series: [{
+      type: 'bar',
+      data: [10, 11, 12, 12, 13, 14, 15, 16],
+      barWidth: 11,
+      itemStyle: { color: '#0891b2', borderRadius: [0, 4, 4, 0] },
+      label: { show: true, position: 'right', color: '#64748b', fontSize: 10, formatter: '{c} 车' }
+    }]
+  });
+
+  document.getElementById('genBtn').addEventListener('click', function () {
+    showToast('统计已按当前筛选条件重新生成（演示）');
+  });
+  document.getElementById('exportAllBtn').addEventListener('click', function () {
+    showToast('演示环境：批量导出仅展示交互，不生成文件');
+  });
+  var exportButtons = document.querySelectorAll('.export-btn');
+  for (var k = 0; k < exportButtons.length; k++) {
+    exportButtons[k].addEventListener('click', function () {
+      showToast('演示环境：报表导出仅展示交互，不生成文件');
+    });
+  }
+
+  window.addEventListener('resize', function () {
+    trendChart.resize();
+    shiftChart.resize();
+    pieChart.resize();
+    topChart.resize();
+  });
+</script>
+</body>
+</html>

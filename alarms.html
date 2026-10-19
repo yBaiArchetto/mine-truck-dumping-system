@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html class="w-full h-full" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>告警管理与人工复核 · 矿井货车倒矿智能管控系统</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/echarts.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+</style>
+</head>
+<body class="w-full h-full overflow-hidden bg-slate-100 text-slate-800">
+<div class="flex w-full h-full">
+<aside class="w-[248px] shrink-0 h-full bg-slate-900 flex flex-col">
+<div class="h-16 shrink-0 flex items-center gap-3 px-5 border-b border-white/10">
+<div class="w-9 h-9 rounded-lg bg-cyan-600 grid place-items-center text-white">
+<iconify-icon icon="mdi:dump-truck" width="22"></iconify-icon>
+</div>
+<div class="leading-tight">
+<p class="text-white text-[13px] font-semibold">矿井货车倒矿</p>
+<p class="text-slate-400 text-[11px]">智能管控系统</p>
+</div>
+</div>
+<nav class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4 px-3 space-y-1">
+<p class="px-3 pb-1 text-[11px] tracking-wider text-slate-500">概览</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="home.html">
+<iconify-icon icon="mdi:view-dashboard-outline" width="18"></iconify-icon>工作台
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="dashboard.html">
+<iconify-icon icon="mdi:chart-areaspline" width="18"></iconify-icon>可视化看板
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">业务管控</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="recognition.html">
+<iconify-icon icon="mdi:car-connected" width="18"></iconify-icon>车牌识别计次
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="vehicles.html">
+<iconify-icon icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>车辆定位管控
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] bg-cyan-600 text-white" href="alarms.html">
+<iconify-icon icon="mdi:alert-outline" width="18"></iconify-icon>告警与复核
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="statistics.html">
+<iconify-icon icon="mdi:chart-bar" width="18"></iconify-icon>统计与报表
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">终端与项目</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="mobile.html">
+<iconify-icon icon="mdi:cellphone" width="18"></iconify-icon>移动端 H5
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="project.html">
+<iconify-icon icon="mdi:clipboard-check-outline" width="18"></iconify-icon>项目实施与验收
+      </a>
+</nav>
+<div class="p-3 border-t border-white/10">
+<div class="rounded-lg bg-white/5 p-3">
+<p class="text-[11px] text-slate-400 leading-relaxed">内网部署 · 演示数据<br/>需求基线草案 V0.9</p>
+</div>
+</div>
+</aside>
+<div class="flex-1 min-w-0 h-full flex flex-col">
+<header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+<div>
+<h1 class="text-[15px] font-semibold text-slate-900">告警管理与人工复核</h1>
+<p class="text-[12px] text-slate-500">告警分级、复核处置与误报率跟踪</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+<iconify-icon icon="mdi:information-outline" width="14"></iconify-icon>演示数据
+        </span>
+<div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white grid place-items-center text-[12px]">安</div>
+<div class="leading-tight">
+<p class="text-[12px] font-medium text-slate-800">安全监管人员</p>
+<p class="text-[11px] text-slate-500">安全监察室</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden p-6 space-y-5">
+<!-- 复核指标 -->
+<section class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">今日告警总数</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none">23<span class="text-[12px] text-slate-500 ml-1 font-normal">条</span></p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">待复核</p>
+<p class="mt-2 text-[24px] font-semibold text-amber-600 leading-none" id="pendingCount">3<span class="text-[12px] text-slate-500 ml-1 font-normal">条</span></p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">告警误报率</p>
+<p class="mt-2 text-[24px] font-semibold text-emerald-600 leading-none">1.7<span class="text-[12px] text-slate-500 font-normal">%</span></p>
+<p class="mt-1.5 text-[11px] text-slate-500">承诺 ≤ 2%（待确认是否强制验收）</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">平均复核时长</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none">14<span class="text-[12px] text-slate-500 ml-1 font-normal">秒/条</span></p>
+<p class="mt-1.5 text-[11px] text-slate-500">承诺 ≤ 20 秒/条</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">平均告警时延</p>
+<p class="mt-2 text-[24px] font-semibold text-slate-900 leading-none">1.8<span class="text-[12px] text-slate-500 ml-1 font-normal">秒</span></p>
+<p class="mt-1.5 text-[11px] text-emerald-600">满足考核要求</p>
+</div>
+</section>
+<!-- 筛选 -->
+<section class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<label class="block">
+<span class="text-[12px] text-slate-500">告警级别</span>
+<select class="mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2 text-[13px] focus:outline-none focus:border-cyan-500" id="levelSelect">
+<option value="all">全部级别</option>
+<option value="紧急">紧急</option>
+<option value="重要">重要</option>
+<option value="一般">一般</option>
+</select>
+</label>
+<label class="block">
+<span class="text-[12px] text-slate-500">告警类型</span>
+<select class="mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2 text-[13px] focus:outline-none focus:border-cyan-500" id="typeSelect">
+<option value="all">全部类型</option>
+<option value="车辆滞留超时">车辆滞留超时</option>
+<option value="识别置信度偏低">识别置信度偏低</option>
+<option value="定位偏差超限">定位偏差超限</option>
+<option value="点位外停留">点位外停留</option>
+<option value="车载终端离线">车载终端离线</option>
+</select>
+</label>
+<label class="block">
+<span class="text-[12px] text-slate-500">处理状态</span>
+<select class="mt-1.5 w-full rounded-lg border border-slate-200 px-3 py-2 text-[13px] focus:outline-none focus:border-cyan-500" id="stateSelect">
+<option value="all">全部状态</option>
+<option value="pending">待复核</option>
+<option value="done">已复核</option>
+</select>
+</label>
+<div class="flex items-end gap-2">
+<button class="flex-1 rounded-lg bg-slate-900 text-white text-[13px] py-2 hover:bg-slate-800" id="searchBtn">查询</button>
+<button class="flex-1 rounded-lg border border-slate-200 text-slate-600 text-[13px] py-2 hover:bg-slate-50" id="resetBtn">重置</button>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+<!-- 告警列表 -->
+<section class="xl:col-span-2 rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">告警列表</h2>
+<p class="text-[11px] text-slate-500">共 <span id="rowCount">8</span> 条 · 点击「复核」提交处置结论</p>
+</div>
+<span class="text-[11px] text-slate-500">复核时限：20 秒/条（演示口径）</span>
+</div>
+<div class="overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">告警时间</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">告警类型</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">级别</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">涉及车辆</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">点位</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">状态</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">操作</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100" id="alarmBody">
+<tr class="hover:bg-slate-50/70" data-level="紧急" data-state="pending" data-type="车辆滞留超时">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:21:44</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">车辆滞留超时</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">紧急</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·8F23 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">1 号卸矿平台</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">待复核</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-cyan-700 hover:underline">复核</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="重要" data-state="pending" data-type="识别置信度偏低">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">15:47:12</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">识别置信度偏低</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">重要</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·P771 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2 号计量点</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">待复核</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-cyan-700 hover:underline">复核</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="一般" data-state="pending" data-type="点位外停留">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">15:12:36</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">点位外停留</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">一般</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·A309 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">北侧电子围栏</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">待复核</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-cyan-700 hover:underline">复核</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="重要" data-state="done" data-type="定位偏差超限">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">14:58:03</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">定位偏差超限</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">重要</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·M602 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">3 号排土点</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">已复核 · 误报</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-slate-400 hover:underline">查看</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="重要" data-state="done" data-type="识别置信度偏低">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">14:31:20</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">识别置信度偏低</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">重要</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·H204 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">北侧装车点</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">已复核 · 真实告警</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-slate-400 hover:underline">查看</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="一般" data-state="done" data-type="车载终端离线">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">13:52:41</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">车载终端离线</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">一般</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·X088 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">—</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">已复核 · 真实告警</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-slate-400 hover:underline">查看</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="一般" data-state="done" data-type="点位外停留">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">13:20:15</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">点位外停留</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">一般</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·T556 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">北侧电子围栏</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">已复核 · 误报</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-slate-400 hover:underline">查看</button></td>
+</tr>
+<tr class="hover:bg-slate-50/70" data-level="重要" data-state="done" data-type="车辆滞留超时">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">12:47:58</td>
+<td class="px-5 py-3 text-slate-800 whitespace-nowrap">车辆滞留超时</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">重要</span></td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">豫 C·B918 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">3 号排土点</td>
+<td class="px-5 py-3 status-cell"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">已复核 · 真实告警</span></td>
+<td class="px-5 py-3"><button class="review-btn text-[12px] text-slate-400 hover:underline">查看</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 右侧统计 -->
+<section class="space-y-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">告警类型分布</h2>
+<p class="text-[11px] text-slate-500">今日 23 条 · 单位：条</p>
+<div class="mt-2 w-full h-[220px]" id="pieChart"></div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">复核处置规范</h2>
+<ul class="mt-3 space-y-2.5 text-[12px] text-slate-600">
+<li class="flex gap-2">
+<iconify-icon class="text-rose-500 mt-0.5 shrink-0" icon="mdi:clock-alert-outline" width="16"></iconify-icon>
+                紧急告警须在 2 分钟内响应，重要告警 5 分钟内响应。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:account-check-outline" width="16"></iconify-icon>
+                复核结论分为「真实告警」与「误报」，均需填写处置说明。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-slate-500 mt-0.5 shrink-0" icon="mdi:history" width="16"></iconify-icon>
+                复核记录写入审计日志，保留操作人、时间与结论。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-amber-500 mt-0.5 shrink-0" icon="mdi:file-document-outline" width="16"></iconify-icon>
+                误报率与复核时效建议纳入试运行考核，是否强制验收由甲方确认。
+              </li>
+</ul>
+</div>
+</section>
+</div>
+<p class="text-[11px] text-slate-400 pb-2">告警内容与复核结论为演示数据，用于说明交互流程。</p>
+</main>
+</div>
+</div>
+<!-- 复核弹窗 -->
+<div class="hidden fixed inset-0 z-50 items-center justify-center bg-slate-900/50 p-6" id="reviewModal">
+<div class="w-full max-w-lg rounded-xl bg-white shadow-xl overflow-hidden">
+<div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+<div>
+<h3 class="text-[15px] font-semibold text-slate-900">告警人工复核</h3>
+<p class="text-[11px] text-slate-500">
+<span id="mType">车辆滞留超时</span> · 告警时间 <span id="mTime">16:21:44</span>
+</p>
+</div>
+<button class="w-8 h-8 rounded-lg grid place-items-center text-slate-400 hover:bg-slate-100" id="reviewClose">
+<iconify-icon icon="mdi:close" width="18"></iconify-icon>
+</button>
+</div>
+<div class="p-5 space-y-4">
+<div class="grid grid-cols-3 gap-3 text-[12px]">
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+<p class="text-slate-500">涉及车辆</p>
+<p class="mt-1 text-slate-800" id="mPlate">豫 C·8F23 挂</p>
+</div>
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+<p class="text-slate-500">告警级别</p>
+<p class="mt-1 text-slate-800" id="mLevel">紧急</p>
+</div>
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+<p class="text-slate-500">持续时长</p>
+<p class="mt-1 text-slate-800">8 分 24 秒</p>
+</div>
+</div>
+<div>
+<p class="text-[12px] text-slate-500">复核结论</p>
+<div class="mt-2 grid grid-cols-2 gap-3">
+<label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-[13px] text-slate-700 cursor-pointer hover:bg-slate-50">
+<input checked="" class="accent-cyan-700" name="reviewResult" type="radio" value="true"/>
+            真实告警
+          </label>
+<label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-[13px] text-slate-700 cursor-pointer hover:bg-slate-50">
+<input class="accent-cyan-700" name="reviewResult" type="radio" value="false"/>
+            误报
+          </label>
+</div>
+</div>
+<div>
+<p class="text-[12px] text-slate-500">处置说明</p>
+<textarea class="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-cyan-500" id="remarkInput" placeholder="请填写现场核实情况、处置措施或误报原因" rows="3"></textarea>
+</div>
+<p class="text-[11px] text-slate-400">提交后写入审计日志，可在告警列表查看最新状态（演示环境不产生真实数据）。</p>
+</div>
+<div class="flex items-center justify-end gap-3 px-5 py-4 bg-slate-50 border-t border-slate-100">
+<button class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-[13px] text-slate-600 hover:bg-slate-100" id="reviewCancel">取消</button>
+<button class="rounded-lg bg-cyan-700 px-4 py-2 text-[13px] text-white hover:bg-cyan-800" id="reviewSubmit">提交复核结论</button>
+</div>
+</div>
+</div>
+<div class="hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-[60] rounded-lg bg-slate-900 px-5 py-3 text-[13px] text-white shadow-lg" id="toast"></div>
+<script>
+  var toast = document.getElementById('toast');
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.remove('hidden');
+    setTimeout(function () { toast.classList.add('hidden'); }, 2400);
+  }
+
+  // 筛选
+  var alarmBody = document.getElementById('alarmBody');
+  var rowCount = document.getElementById('rowCount');
+  var pendingCount = document.getElementById('pendingCount');
+  var levelSelect = document.getElementById('levelSelect');
+  var typeSelect = document.getElementById('typeSelect');
+  var stateSelect = document.getElementById('stateSelect');
+
+  function refresh() {
+    var level = levelSelect.value;
+    var type = typeSelect.value;
+    var state = stateSelect.value;
+    var rows = alarmBody.querySelectorAll('tr');
+    var visible = 0;
+    var pending = 0;
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      var ok = (level === 'all' || row.getAttribute('data-level') === level) &&
+        (type === 'all' || row.getAttribute('data-type') === type) &&
+        (state === 'all' || row.getAttribute('data-state') === state);
+      if (ok) { row.classList.remove('hidden'); visible++; } else { row.classList.add('hidden'); }
+      if (row.getAttribute('data-state') === 'pending') { pending++; }
+    }
+    rowCount.textContent = String(visible);
+    pendingCount.innerHTML = String(pending) + '<span class="text-[12px] text-slate-500 ml-1 font-normal">条</span>';
+  }
+
+  document.getElementById('searchBtn').addEventListener('click', function () {
+    refresh();
+    showToast('已按筛选条件刷新告警列表（演示）');
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    levelSelect.value = 'all';
+    typeSelect.value = 'all';
+    stateSelect.value = 'all';
+    refresh();
+    showToast('筛选条件已重置');
+  });
+  levelSelect.addEventListener('change', refresh);
+  typeSelect.addEventListener('change', refresh);
+  stateSelect.addEventListener('change', refresh);
+
+  // 复核弹窗
+  var reviewModal = document.getElementById('reviewModal');
+  var currentRow = null;
+  var mType = document.getElementById('mType');
+  var mTime = document.getElementById('mTime');
+  var mPlate = document.getElementById('mPlate');
+  var mLevel = document.getElementById('mLevel');
+  var remarkInput = document.getElementById('remarkInput');
+
+  function openReview(row) {
+    currentRow = row;
+    var cells = row.querySelectorAll('td');
+    mTime.textContent = cells[0].textContent.trim();
+    mType.textContent = cells[1].textContent.trim();
+    mLevel.textContent = cells[2].textContent.trim();
+    mPlate.textContent = cells[3].textContent.trim();
+    remarkInput.value = '';
+    reviewModal.classList.remove('hidden');
+    reviewModal.classList.add('flex');
+  }
+  function closeReview() {
+    reviewModal.classList.add('hidden');
+    reviewModal.classList.remove('flex');
+    currentRow = null;
+  }
+
+  var reviewButtons = alarmBody.querySelectorAll('.review-btn');
+  for (var i = 0; i < reviewButtons.length; i++) {
+    reviewButtons[i].addEventListener('click', function () {
+      openReview(this.closest('tr'));
+    });
+  }
+  document.getElementById('reviewClose').addEventListener('click', closeReview);
+  document.getElementById('reviewCancel').addEventListener('click', closeReview);
+  reviewModal.addEventListener('click', function (e) { if (e.target === reviewModal) { closeReview(); } });
+
+  document.getElementById('reviewSubmit').addEventListener('click', function () {
+    if (!currentRow) { return; }
+    var checked = document.querySelector('input[name="reviewResult"]:checked');
+    var isTruth = checked && checked.value === 'true';
+    var cell = currentRow.querySelector('.status-cell');
+    var span = document.createElement('span');
+    span.textContent = isTruth ? '已复核 · 真实告警' : '已复核 · 误报';
+    span.className = isTruth
+      ? 'text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200'
+      : 'text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200';
+    cell.innerHTML = '';
+    cell.appendChild(span);
+    currentRow.setAttribute('data-state', 'done');
+    closeReview();
+    refresh();
+    showToast('复核结论已提交：' + (isTruth ? '真实告警' : '误报') + '（演示）');
+  });
+
+  // 分布图
+  var pieChart = echarts.init(document.getElementById('pieChart'));
+  pieChart.setOption({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} 条 ({d}%)' },
+    legend: { bottom: 0, itemWidth: 10, itemHeight: 8, textStyle: { color: '#64748b', fontSize: 11 } },
+    series: [{
+      type: 'pie',
+      radius: ['46%', '70%'],
+      center: ['50%', '44%'],
+      avoidLabelOverlap: true,
+      itemStyle: { borderColor: '#ffffff', borderWidth: 2 },
+      label: { color: '#64748b', fontSize: 11, formatter: '{b}\n{c} 条' },
+      labelLine: { length: 8, length2: 8 },
+      data: [
+        { value: 8, name: '车辆滞留超时', itemStyle: { color: '#0e7490' } },
+        { value: 6, name: '识别置信度偏低', itemStyle: { color: '#0891b2' } },
+        { value: 4, name: '定位偏差超限', itemStyle: { color: '#38bdf8' } },
+        { value: 3, name: '点位外停留', itemStyle: { color: '#a5b4fc' } },
+        { value: 2, name: '车载终端离线', itemStyle: { color: '#cbd5e1' } }
+      ]
+    }]
+  });
+  window.addEventListener('resize', function () { pieChart.resize(); });
+
+  refresh();
+</script>
+</body>
+</html>

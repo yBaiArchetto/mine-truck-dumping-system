@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="w-full h-full" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>车辆定位与作业管控 · 矿井货车倒矿智能管控系统</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/echarts.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .grid-bg {
+    background-image: linear-gradient(rgba(15, 118, 110, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 118, 110, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .pulse { animation: pulse-dot 1.8s ease-in-out infinite; }
+  .veh-item.active { border-color: #0e7490; background: #ecfeff; }
+</style>
+</head>
+<body class="w-full h-full overflow-hidden bg-slate-100 text-slate-800">
+<div class="flex w-full h-full">
+<aside class="w-[248px] shrink-0 h-full bg-slate-900 flex flex-col">
+<div class="h-16 shrink-0 flex items-center gap-3 px-5 border-b border-white/10">
+<div class="w-9 h-9 rounded-lg bg-cyan-600 grid place-items-center text-white">
+<iconify-icon icon="mdi:dump-truck" width="22"></iconify-icon>
+</div>
+<div class="leading-tight">
+<p class="text-white text-[13px] font-semibold">矿井货车倒矿</p>
+<p class="text-slate-400 text-[11px]">智能管控系统</p>
+</div>
+</div>
+<nav class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4 px-3 space-y-1">
+<p class="px-3 pb-1 text-[11px] tracking-wider text-slate-500">概览</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="home.html">
+<iconify-icon icon="mdi:view-dashboard-outline" width="18"></iconify-icon>工作台
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="dashboard.html">
+<iconify-icon icon="mdi:chart-areaspline" width="18"></iconify-icon>可视化看板
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">业务管控</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="recognition.html">
+<iconify-icon icon="mdi:car-connected" width="18"></iconify-icon>车牌识别计次
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] bg-cyan-600 text-white" href="vehicles.html">
+<iconify-icon icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>车辆定位管控
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="alarms.html">
+<iconify-icon icon="mdi:alert-outline" width="18"></iconify-icon>告警与复核
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="statistics.html">
+<iconify-icon icon="mdi:chart-bar" width="18"></iconify-icon>统计与报表
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">终端与项目</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="mobile.html">
+<iconify-icon icon="mdi:cellphone" width="18"></iconify-icon>移动端 H5
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="project.html">
+<iconify-icon icon="mdi:clipboard-check-outline" width="18"></iconify-icon>项目实施与验收
+      </a>
+</nav>
+<div class="p-3 border-t border-white/10">
+<div class="rounded-lg bg-white/5 p-3">
+<p class="text-[11px] text-slate-400 leading-relaxed">内网部署 · 演示数据<br/>需求基线草案 V0.9</p>
+</div>
+</div>
+</aside>
+<div class="flex-1 min-w-0 h-full flex flex-col">
+<header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+<div>
+<h1 class="text-[15px] font-semibold text-slate-900">车辆定位与作业过程管控</h1>
+<p class="text-[12px] text-slate-500">露天矿区车辆定位、电子围栏与倒矿作业环节跟踪</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+<iconify-icon icon="mdi:information-outline" width="14"></iconify-icon>演示数据
+        </span>
+<div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white grid place-items-center text-[12px]">调</div>
+<div class="leading-tight">
+<p class="text-[12px] font-medium text-slate-800">调度员</p>
+<p class="text-[11px] text-slate-500">调度中心</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden p-6 space-y-5">
+<!-- 定位精度 -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">平均定位偏差</p>
+<iconify-icon class="text-cyan-600" icon="mdi:crosshairs-gps" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">6.4<span class="text-[13px] text-slate-500 ml-1 font-normal">米</span></p>
+<p class="mt-2 text-[11px] text-slate-500">合同验收底线 ≤ 10 米</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">优于底线占比</p>
+<iconify-icon class="text-emerald-600" icon="mdi:check-decagram-outline" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">97.6<span class="text-[13px] text-slate-500 font-normal">%</span></p>
+<p class="mt-2 text-[11px] text-slate-500">超底线车辆 1 台待核查</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">在线车辆 / 接入</p>
+<iconify-icon class="text-cyan-600" icon="mdi:truck-fast-outline" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">42<span class="text-[13px] text-slate-500 font-normal">/45</span></p>
+<p class="mt-2 text-[11px] text-amber-600">离线 3 台（车载终端待巡检）</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">今日作业车辆</p>
+<iconify-icon class="text-cyan-600" icon="mdi:account-hard-hat-outline" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">38<span class="text-[13px] text-slate-500 ml-1 font-normal">台</span></p>
+<p class="mt-2 text-[11px] text-slate-500">覆盖 4 个作业点位</p>
+</div>
+</section>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+<!-- 地图 + 作业流程 -->
+<section class="xl:col-span-2 space-y-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">矿区点位与车辆分布</h2>
+<p class="text-[11px] text-slate-500">露天围栏场景示意 · 不表示真实地理坐标</p>
+</div>
+<div class="flex items-center gap-3 text-[11px] text-slate-500">
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-500"></span>作业中</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>等待</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>超限告警</span>
+</div>
+</div>
+<div class="relative mt-3 h-[330px] rounded-lg overflow-hidden grid-bg bg-slate-50 border border-slate-200">
+<div class="absolute left-[18%] right-[14%] top-1/2 h-[3px] bg-cyan-200"></div>
+<div class="absolute left-[18%] top-[24%] bottom-[16%] w-[3px] bg-cyan-200"></div>
+<div class="absolute right-[16%] top-[24%] bottom-[16%] w-[3px] bg-cyan-200"></div>
+<div class="absolute right-[6%] top-[14%] w-[220px] h-[220px] rounded-full border border-dashed border-cyan-400/70"></div>
+<span class="absolute right-[22%] top-[11%] text-[10px] text-cyan-600">北侧电子围栏（露天区）</span>
+<div class="absolute left-[8%] top-[14%] rounded-md border border-slate-200 bg-white px-3 py-2 shadow-sm">
+<p class="text-[11px] text-slate-700">北侧装车点</p>
+<p class="text-[10px] text-slate-400">平均偏差 7.0 米</p>
+</div>
+<div class="absolute right-[6%] top-[42%] rounded-md border border-slate-200 bg-white px-3 py-2 shadow-sm">
+<p class="text-[11px] text-slate-700">1 号卸矿平台</p>
+<p class="text-[10px] text-slate-400">平均偏差 5.2 米</p>
+</div>
+<div class="absolute right-[6%] bottom-[8%] rounded-md border border-slate-200 bg-white px-3 py-2 shadow-sm">
+<p class="text-[11px] text-slate-700">2 号计量点</p>
+<p class="text-[10px] text-slate-400">平均偏差 4.8 米</p>
+</div>
+<div class="absolute left-[8%] bottom-[10%] rounded-md border border-slate-200 bg-white px-3 py-2 shadow-sm">
+<p class="text-[11px] text-slate-700">3 号排土点</p>
+<p class="text-[10px] text-slate-400">平均偏差 6.9 米</p>
+</div>
+<span class="pulse absolute left-[26%] top-[44%] w-3.5 h-3.5 rounded-full bg-cyan-500 ring-4 ring-cyan-500/20"></span>
+<span class="pulse absolute left-[42%] top-[50%] w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20"></span>
+<span class="pulse absolute right-[20%] top-[36%] w-3.5 h-3.5 rounded-full bg-rose-500 ring-4 ring-rose-500/20"></span>
+<span class="pulse absolute right-[30%] bottom-[28%] w-3.5 h-3.5 rounded-full bg-cyan-500 ring-4 ring-cyan-500/20"></span>
+<span class="pulse absolute left-[34%] bottom-[32%] w-3.5 h-3.5 rounded-full bg-cyan-500 ring-4 ring-cyan-500/20"></span>
+<div class="absolute left-3 bottom-3 rounded-md bg-white/90 border border-slate-200 px-3 py-2">
+<p class="text-[10px] text-slate-500">定位数据刷新间隔 5 秒 · 演示数据</p>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">作业过程管控</h2>
+<p class="text-[11px] text-slate-500">
+                  当前车辆：<span class="text-slate-800 font-medium" id="curPlate">豫 C·8F23 挂</span>
+                  · 司机 <span class="text-slate-800" id="curDriver">王师傅</span>
+</p>
+</div>
+<span class="text-[11px] px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200" id="curState">卸矿作业中</span>
+</div>
+<div class="mt-5 grid grid-cols-4 gap-2">
+<div class="step-item" data-step="0">
+<div class="flex items-center gap-2">
+<span class="step-dot w-7 h-7 rounded-full grid place-items-center text-[11px] bg-slate-200 text-slate-500">1</span>
+<span class="text-[12px] text-slate-600">进场登记</span>
+</div>
+<div class="mt-2 h-1 rounded-full bg-slate-200"></div>
+</div>
+<div class="step-item" data-step="1">
+<div class="flex items-center gap-2">
+<span class="step-dot w-7 h-7 rounded-full grid place-items-center text-[11px] bg-slate-200 text-slate-500">2</span>
+<span class="text-[12px] text-slate-600">计量称重</span>
+</div>
+<div class="mt-2 h-1 rounded-full bg-slate-200"></div>
+</div>
+<div class="step-item" data-step="2">
+<div class="flex items-center gap-2">
+<span class="step-dot w-7 h-7 rounded-full grid place-items-center text-[11px] bg-slate-200 text-slate-500">3</span>
+<span class="text-[12px] text-slate-600">卸矿作业</span>
+</div>
+<div class="mt-2 h-1 rounded-full bg-slate-200"></div>
+</div>
+<div class="step-item" data-step="3">
+<div class="flex items-center gap-2">
+<span class="step-dot w-7 h-7 rounded-full grid place-items-center text-[11px] bg-slate-200 text-slate-500">4</span>
+<span class="text-[12px] text-slate-600">离场计次</span>
+</div>
+<div class="mt-2 h-1 rounded-full bg-slate-200"></div>
+</div>
+</div>
+<div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+<div>
+<p class="text-[12px] font-medium text-slate-700">当班轨迹事件</p>
+<ul class="mt-3 space-y-3">
+<li class="flex gap-3">
+<span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-600 shrink-0"></span>
+<div class="leading-tight">
+<p class="text-[12px] text-slate-700">北门进场 · 车牌识别成功</p>
+<p class="text-[11px] text-slate-400">16:02:14</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-600 shrink-0"></span>
+<div class="leading-tight">
+<p class="text-[12px] text-slate-700">2 号计量点称重完成 · 净重 39.6 吨</p>
+<p class="text-[11px] text-slate-400">16:09:38</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+<div class="leading-tight">
+<p class="text-[12px] text-slate-700">1 号卸矿平台排队等待 4 分 12 秒</p>
+<p class="text-[11px] text-slate-400">16:15:02</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-600 shrink-0"></span>
+<div class="leading-tight">
+<p class="text-[12px] text-slate-700">进入卸矿区域 · 开始卸矿</p>
+<p class="text-[11px] text-slate-400">16:21:44</p>
+</div>
+</li>
+<li class="flex gap-3">
+<span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0"></span>
+<div class="leading-tight">
+<p class="text-[12px] text-slate-500">离场计次（待完成）</p>
+<p class="text-[11px] text-slate-400">预计 16:41</p>
+</div>
+</li>
+</ul>
+</div>
+<div>
+<p class="text-[12px] font-medium text-slate-700">各点位平均定位偏差</p>
+<p class="text-[11px] text-slate-400">单位：米 · 红线为 10 米验收底线</p>
+<div class="mt-2 w-full h-[192px]" id="offsetChart"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- 车辆列表 -->
+<section class="rounded-xl border border-slate-200 bg-white flex flex-col overflow-hidden">
+<div class="px-5 py-4 border-b border-slate-100">
+<h2 class="text-[14px] font-semibold text-slate-900">在途车辆</h2>
+<p class="text-[11px] text-slate-500">点击车辆查看作业流程与定位详情</p>
+</div>
+<ul class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden divide-y divide-slate-100" id="vehicleList">
+<li>
+<button class="veh-item active w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="王师傅" data-offset="5.2 米" data-plate="豫 C·8F23 挂" data-site="1 号卸矿平台" data-state="卸矿作业中" data-step="2" data-trips="12">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·8F23 挂</span>
+<span class="text-[11px] text-cyan-700">作业中</span>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">王师傅 · 1 号卸矿平台 · 偏差 5.2 米</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 12 车</p>
+</button>
+</li>
+<li>
+<button class="veh-item w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="李师傅" data-offset="4.8 米" data-plate="豫 C·P771 挂" data-site="2 号计量点" data-state="计量称重" data-step="1" data-trips="9">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·P771 挂</span>
+<span class="text-[11px] text-amber-600">等待中</span>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">李师傅 · 2 号计量点 · 偏差 4.8 米</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 9 车 · 识别待复核</p>
+</button>
+</li>
+<li>
+<button class="veh-item w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="赵师傅" data-offset="6.1 米" data-plate="豫 C·A309 挂" data-site="出口闸机" data-state="已离场" data-step="3" data-trips="7">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·A309 挂</span>
+<span class="text-[11px] text-slate-500">已离场</span>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">赵师傅 · 出口闸机 · 偏差 6.1 米</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 7 车</p>
+</button>
+</li>
+<li>
+<button class="veh-item w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="孙师傅" data-offset="8.4 米" data-plate="豫 C·K118 挂" data-site="北侧装车点" data-state="进场登记" data-step="0" data-trips="5">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·K118 挂</span>
+<span class="text-[11px] text-amber-600">等待中</span>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">孙师傅 · 北侧装车点 · 偏差 8.4 米</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 5 车</p>
+</button>
+</li>
+<li>
+<button class="veh-item w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="周师傅" data-offset="12.6 米" data-plate="豫 C·M602 挂" data-site="3 号排土点" data-state="定位超限" data-step="2" data-trips="4">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·M602 挂</span>
+<span class="text-[11px] text-rose-600">超限告警</span>
+</div>
+<p class="mt-1 text-[11px] text-rose-600">周师傅 · 3 号排土点 · 偏差 12.6 米（超 10 米底线）</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 4 车</p>
+</button>
+</li>
+<li>
+<button class="veh-item w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="吴师傅" data-offset="7.0 米" data-plate="豫 C·H204 挂" data-site="北侧装车点" data-state="计量称重" data-step="1" data-trips="11">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·H204 挂</span>
+<span class="text-[11px] text-amber-600">等待中</span>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">吴师傅 · 北侧装车点 · 偏差 7.0 米</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 11 车</p>
+</button>
+</li>
+<li>
+<button class="veh-item w-full text-left px-5 py-3 border-l-2 border-transparent transition-colors hover:bg-slate-50" data-driver="郑师傅" data-offset="6.3 米" data-plate="豫 C·B918 挂" data-site="3 号排土点" data-state="卸矿作业中" data-step="2" data-trips="4">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-slate-800">豫 C·B918 挂</span>
+<span class="text-[11px] text-cyan-700">作业中</span>
+</div>
+<p class="mt-1 text-[11px] text-slate-500">郑师傅 · 3 号排土点 · 偏差 6.3 米</p>
+<p class="mt-1 text-[11px] text-slate-400">今日已计次 4 车</p>
+</button>
+</li>
+</ul>
+<div class="px-5 py-4 border-t border-slate-100">
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-3 text-[11px] text-slate-600 leading-relaxed">
+              井工矿场景本期仅预留接口，暂不实施；定位精度以合同 ≤10 米为验收底线，投标承诺 ≤1 米需明确测试条件后另行确认。
+            </div>
+</div>
+</section>
+</div>
+<p class="text-[11px] text-slate-400 pb-2">车辆、司机与偏差数值均为原型演示数据，用于说明交互与信息结构。</p>
+</main>
+</div>
+</div>
+<script>
+  // 车辆选择
+  var items = document.querySelectorAll('.veh-item');
+  var curPlate = document.getElementById('curPlate');
+  var curDriver = document.getElementById('curDriver');
+  var curState = document.getElementById('curState');
+  var stepItems = document.querySelectorAll('.step-item');
+
+  function renderSteps(active) {
+    for (var i = 0; i < stepItems.length; i++) {
+      var dot = stepItems[i].querySelector('.step-dot');
+      var bar = stepItems[i].lastElementChild;
+      var idx = parseInt(stepItems[i].getAttribute('data-step'), 10);
+      if (idx <= active) {
+        dot.className = 'step-dot w-7 h-7 rounded-full grid place-items-center text-[11px] bg-cyan-600 text-white';
+        bar.className = 'mt-2 h-1 rounded-full bg-cyan-500';
+      } else {
+        dot.className = 'step-dot w-7 h-7 rounded-full grid place-items-center text-[11px] bg-slate-200 text-slate-500';
+        bar.className = 'mt-2 h-1 rounded-full bg-slate-200';
+      }
+    }
+  }
+
+  for (var i = 0; i < items.length; i++) {
+    items[i].addEventListener('click', function () {
+      for (var j = 0; j < items.length; j++) {
+        items[j].classList.remove('active');
+      }
+      this.classList.add('active');
+      curPlate.textContent = this.getAttribute('data-plate');
+      curDriver.textContent = this.getAttribute('data-driver');
+      curState.textContent = this.getAttribute('data-state');
+      var step = parseInt(this.getAttribute('data-step'), 10);
+      renderSteps(step);
+    });
+  }
+  renderSteps(2);
+
+  // 图表
+  var offsetChart = echarts.init(document.getElementById('offsetChart'));
+  offsetChart.setOption({
+    grid: { left: 76, right: 34, top: 10, bottom: 20 },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    xAxis: {
+      type: 'value',
+      max: 14,
+      splitLine: { lineStyle: { color: '#f1f5f9' } },
+      axisLabel: { color: '#94a3b8', fontSize: 10, formatter: '{value}m' }
+    },
+    yAxis: {
+      type: 'category',
+      inverse: true,
+      data: ['3 号排土点', '北侧装车点', '1 号卸矿平台', '2 号计量点'],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: '#64748b', fontSize: 11 }
+    },
+    series: [{
+      type: 'bar',
+      data: [6.9, 7.0, 5.2, 4.8],
+      barWidth: 12,
+      itemStyle: { color: '#0e7490', borderRadius: [0, 4, 4, 0] },
+      label: { show: true, position: 'right', color: '#64748b', fontSize: 10, formatter: '{c}m' },
+      markLine: {
+        silent: true,
+        symbol: 'none',
+        lineStyle: { color: '#f43f5e', type: 'dashed' },
+        label: { formatter: '验收底线 10 米', color: '#f43f5e', fontSize: 10, position: 'insideEndTop' },
+        data: [{ xAxis: 10 }]
+      }
+    }]
+  });
+  window.addEventListener('resize', function () { offsetChart.resize(); });
+</script>
+</body>
+</html>

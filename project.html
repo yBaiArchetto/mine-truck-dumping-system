@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+
+<html class="w-full h-full" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>项目实施与验收 · 矿井货车倒矿智能管控系统</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .proj-tab.active { background: #0f172a; color: #ffffff; }
+</style>
+</head>
+<body class="w-full h-full overflow-hidden bg-slate-100 text-slate-800">
+<div class="flex w-full h-full">
+<aside class="w-[248px] shrink-0 h-full bg-slate-900 flex flex-col">
+<div class="h-16 shrink-0 flex items-center gap-3 px-5 border-b border-white/10">
+<div class="w-9 h-9 rounded-lg bg-cyan-600 grid place-items-center text-white">
+<iconify-icon icon="mdi:dump-truck" width="22"></iconify-icon>
+</div>
+<div class="leading-tight">
+<p class="text-white text-[13px] font-semibold">矿井货车倒矿</p>
+<p class="text-slate-400 text-[11px]">智能管控系统</p>
+</div>
+</div>
+<nav class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4 px-3 space-y-1">
+<p class="px-3 pb-1 text-[11px] tracking-wider text-slate-500">概览</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="home.html">
+<iconify-icon icon="mdi:view-dashboard-outline" width="18"></iconify-icon>工作台
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="dashboard.html">
+<iconify-icon icon="mdi:chart-areaspline" width="18"></iconify-icon>可视化看板
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">业务管控</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="recognition.html">
+<iconify-icon icon="mdi:car-connected" width="18"></iconify-icon>车牌识别计次
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="vehicles.html">
+<iconify-icon icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>车辆定位管控
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="alarms.html">
+<iconify-icon icon="mdi:alert-outline" width="18"></iconify-icon>告警与复核
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="statistics.html">
+<iconify-icon icon="mdi:chart-bar" width="18"></iconify-icon>统计与报表
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">终端与项目</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="mobile.html">
+<iconify-icon icon="mdi:cellphone" width="18"></iconify-icon>移动端 H5
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] bg-cyan-600 text-white" href="project.html">
+<iconify-icon icon="mdi:clipboard-check-outline" width="18"></iconify-icon>项目实施与验收
+      </a>
+</nav>
+<div class="p-3 border-t border-white/10">
+<div class="rounded-lg bg-white/5 p-3">
+<p class="text-[11px] text-slate-400 leading-relaxed">需求基线草案 V0.9<br/>截至 2026-10-15</p>
+</div>
+</div>
+</aside>
+<div class="flex-1 min-w-0 h-full flex flex-col">
+<header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+<div>
+<h1 class="text-[15px] font-semibold text-slate-900">项目实施与验收</h1>
+<p class="text-[12px] text-slate-500">项目范围、里程碑、交付文档、验收标准与待确认事项</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-[12px] text-slate-600 bg-slate-50 border border-slate-200 rounded-full px-3 py-1">
+<iconify-icon icon="mdi:file-document-outline" width="14"></iconify-icon>依据招标文件与需求分析
+        </span>
+<div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white grid place-items-center text-[12px]">项</div>
+<div class="leading-tight">
+<p class="text-[12px] font-medium text-slate-800">项目负责人</p>
+<p class="text-[11px] text-slate-500">乙方项目组</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden p-6 space-y-5">
+<!-- 标签 -->
+<div class="inline-flex flex-wrap rounded-lg border border-slate-200 bg-white p-1 gap-1">
+<button class="proj-tab active rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-tab="overview">项目概览</button>
+<button class="proj-tab rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-tab="milestone">里程碑计划</button>
+<button class="proj-tab rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-tab="delivery">交付与验收</button>
+<button class="proj-tab rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-tab="service">培训与售后</button>
+<button class="proj-tab rounded-md px-4 py-1.5 text-[12px] text-slate-600" data-tab="issues">待确认事项</button>
+</div>
+<!-- 项目概览 -->
+<section class="space-y-5" id="tab-overview">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<p class="text-[12px] text-slate-500">项目名称</p>
+<p class="mt-1.5 text-[14px] font-medium text-slate-900">矿井货车倒矿智能管控系统开发项目</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<p class="text-[12px] text-slate-500">招标人（甲方）</p>
+<p class="mt-1.5 text-[14px] font-medium text-slate-900">华盛矿业（集团）有限公司</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<p class="text-[12px] text-slate-500">招标编号</p>
+<p class="mt-1.5 text-[14px] font-medium text-slate-900">HXKY-ZB-2026-0325</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<p class="text-[12px] text-slate-500">采购形式 / 类别</p>
+<p class="mt-1.5 text-[14px] font-medium text-slate-900">企业自主公开招标 · 服务类（软件开发）</p>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">建设范围与体系构成</h2>
+<div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">服务端 Web 管理端</p>
+<p class="mt-1.5 text-[12px] text-slate-600">面向调度、计量、安全与系统管理人员的业务操作与数据管理界面，内网部署。</p>
+</div>
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">可视化看板</p>
+<p class="mt-1.5 text-[12px] text-slate-600">面向调度中心的实时作业、点位分布、告警与识别流水集中展示。</p>
+</div>
+<div class="rounded-lg bg-slate-50 border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">移动端 H5</p>
+<p class="mt-1.5 text-[12px] text-slate-600">面向现场作业人员的轻量操作：识别核对、补录、告警复核与上报。</p>
+</div>
+</div>
+<p class="mt-4 text-[12px] text-slate-600">
+            体系覆盖：三大核心（车牌识别与自动计次、倒矿作业过程管控、车辆定位与告警复核）+ 八大功能模块 + 接口 / 性能 / 安全 / 验收 / 培训 / 售后 / 进度 / 风险。
+          </p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">八大功能模块</h2>
+<div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:database-outline" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">基础数据管理</p>
+<p class="mt-1 text-[12px] text-slate-500">矿区、点位、车辆、司机、班次等主数据维护</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:car-connected" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">车牌识别与自动计次</p>
+<p class="mt-1 text-[12px] text-slate-500">识别流水、置信度阈值、去重与自动计次</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:clipboard-flow-outline" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">倒矿作业过程管控</p>
+<p class="mt-1 text-[12px] text-slate-500">进场、计量、卸矿、离场环节跟踪与耗时统计</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:map-marker-radius-outline" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">车辆定位与轨迹</p>
+<p class="mt-1 text-[12px] text-slate-500">露天围栏定位、轨迹回放与偏差监控</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:alert-outline" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">告警管理与人工复核</p>
+<p class="mt-1 text-[12px] text-slate-500">分级告警、复核结论、误报率与时效跟踪</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:chart-bar" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">数据看板与统计查询</p>
+<p class="mt-1 text-[12px] text-slate-500">多维统计、报表生成与导出留档</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:shield-account-outline" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">系统管理与权限</p>
+<p class="mt-1 text-[12px] text-slate-500">用户、角色、菜单权限、审计日志与备份策略</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<iconify-icon class="text-cyan-700" icon="mdi:cellphone" width="20"></iconify-icon>
+<p class="mt-2 text-[13px] font-medium text-slate-800">移动端 H5 现场作业</p>
+<p class="mt-1 text-[12px] text-slate-500">识别核对、手动补录、告警处置与现场上报</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">乙方项目组（6 人）</h2>
+<ul class="mt-3 divide-y divide-slate-100 text-[13px]">
+<li class="flex items-center justify-between py-2.5"><span class="text-slate-700">项目负责人</span><span class="text-slate-500">1 人</span></li>
+<li class="flex items-center justify-between py-2.5"><span class="text-slate-700">后端开发</span><span class="text-slate-500">2 人</span></li>
+<li class="flex items-center justify-between py-2.5"><span class="text-slate-700">前端开发</span><span class="text-slate-500">1 人</span></li>
+<li class="flex items-center justify-between py-2.5"><span class="text-slate-700">算法工程师</span><span class="text-slate-500">1 人</span></li>
+<li class="flex items-center justify-between py-2.5"><span class="text-slate-700">实施与测试</span><span class="text-slate-500">1 人</span></li>
+</ul>
+<p class="mt-3 text-[12px] text-slate-500">项目负责人在未征得甲方同意情况下不更换；如确需更换，提前 10 个工作日书面申请，接任人员资历不低于原人员。</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">协作与变更机制</h2>
+<ul class="mt-3 space-y-2.5 text-[12px] text-slate-600">
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:calendar-clock" width="16"></iconify-icon>
+                周例会 + 项目周报，同步进度、缺陷与协调事项。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:format-list-checks" width="16"></iconify-icon>
+                问题台账统一登记，明确责任人、处理时限与状态，每周销项。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:file-sign" width="16"></iconify-icon>
+                需求变更须双方书面确认，签订补充协议或变更单后执行。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:account-switch-outline" width="16"></iconify-icon>
+                关键岗位设置 AB 角，降低人员变动风险。
+              </li>
+</ul>
+<div class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-3">
+<p class="text-[12px] text-slate-600">下一次会议：需求规格说明书评审会（时间另行通知）；需求基线草案 V0.9 待冲突项确认后冻结为 V1.0。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 里程碑 -->
+<section class="hidden rounded-xl border border-slate-200 bg-white overflow-hidden" id="tab-milestone">
+<div class="px-5 py-4 border-b border-slate-100">
+<h2 class="text-[14px] font-semibold text-slate-900">项目里程碑与阶段成果</h2>
+<p class="text-[11px] text-slate-500">T 为项目启动时间；阶段周期与交付成果依据合同与需求分析会议结论整理</p>
+</div>
+<div class="overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">阶段</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">时间</th>
+<th class="text-left font-normal px-5 py-2.5">主要工作</th>
+<th class="text-left font-normal px-5 py-2.5">交付成果</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 align-top">
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 whitespace-nowrap"><span class="inline-flex items-center gap-2 text-slate-800 font-medium"><span class="w-6 h-6 rounded-full bg-cyan-600 text-white text-[11px] grid place-items-center">1</span>第一阶段</span></td>
+<td class="px-5 py-4 text-slate-600 whitespace-nowrap">T+0 至 T+1.5 月</td>
+<td class="px-5 py-4 text-slate-600">现场调研、需求确认、概要与详细设计、数据库与接口设计、原型确认</td>
+<td class="px-5 py-4 text-slate-600">需求规格说明书、概要/详细设计说明书、数据库设计说明书、接口设计文档、项目实施方案</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 whitespace-nowrap"><span class="inline-flex items-center gap-2 text-slate-800 font-medium"><span class="w-6 h-6 rounded-full bg-cyan-600 text-white text-[11px] grid place-items-center">2</span>第二阶段</span></td>
+<td class="px-5 py-4 text-slate-600 whitespace-nowrap">T+1.5 至 T+4 月</td>
+<td class="px-5 py-4 text-slate-600">八大功能模块开发、单元测试、模块联调</td>
+<td class="px-5 py-4 text-slate-600">系统各功能模块、单元测试报告</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 whitespace-nowrap"><span class="inline-flex items-center gap-2 text-slate-800 font-medium"><span class="w-6 h-6 rounded-full bg-cyan-600 text-white text-[11px] grid place-items-center">3</span>第三阶段</span></td>
+<td class="px-5 py-4 text-slate-600 whitespace-nowrap">T+4 至 T+4.5 月</td>
+<td class="px-5 py-4 text-slate-600">集成测试、性能测试、安全测试、内网部署、数据初始化、接口联调</td>
+<td class="px-5 py-4 text-slate-600">测试报告、部署手册、用户操作手册、运维手册</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 whitespace-nowrap"><span class="inline-flex items-center gap-2 text-slate-800 font-medium"><span class="w-6 h-6 rounded-full bg-cyan-600 text-white text-[11px] grid place-items-center">4</span>第四阶段</span></td>
+<td class="px-5 py-4 text-slate-600 whitespace-nowrap">T+4.5 至 T+6 月</td>
+<td class="px-5 py-4 text-slate-600">现场培训 3 场次 12 课时、试运行 2 个月、缺陷修复与性能调优</td>
+<td class="px-5 py-4 text-slate-600">培训教材与记录、试运行报告</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 whitespace-nowrap"><span class="inline-flex items-center gap-2 text-slate-800 font-medium"><span class="w-6 h-6 rounded-full bg-slate-800 text-white text-[11px] grid place-items-center">5</span>第五阶段</span></td>
+<td class="px-5 py-4 text-slate-600 whitespace-nowrap">T+6 月起</td>
+<td class="px-5 py-4 text-slate-600">最终验收、质保及运维期服务</td>
+<td class="px-5 py-4 text-slate-600">项目验收报告</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 交付与验收 -->
+<section class="hidden space-y-5" id="tab-delivery">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">交付物清单</h2>
+<p class="text-[11px] text-slate-500">交付纸质版 2 套、电子版 1 套</p>
+<div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">软件与技术资料</p>
+<ul class="mt-2 space-y-1.5 text-[12px] text-slate-600">
+<li>· 系统完整源代码</li>
+<li>· 编译脚本、部署脚本</li>
+<li>· 第三方组件清单</li>
+<li>· 系统管理员账号及全部权限</li>
+</ul>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">文档 13 项</p>
+<div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[12px] text-slate-600">
+<span>· 需求规格说明书</span>
+<span>· 概要设计说明书</span>
+<span>· 详细设计说明书</span>
+<span>· 数据库设计说明书</span>
+<span>· 接口设计文档</span>
+<span>· 项目实施方案</span>
+<span>· 测试方案与测试报告</span>
+<span>· 部署手册</span>
+<span>· 用户操作手册</span>
+<span>· 系统运维手册</span>
+<span>· 培训教材与培训记录</span>
+<span>· 项目验收报告</span>
+<span>· 试运行报告</span>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">性能指标与验收要求</h2>
+<p class="text-[11px] text-slate-500">「当前演示值」为原型演示数据，仅用于说明指标口径，不作为验收依据</p>
+<div class="mt-4 overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">指标项</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">验收要求</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">当前演示值</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">说明</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr><td class="px-5 py-3 text-slate-800">车牌识别准确率</td><td class="px-5 py-3 text-slate-600">按需求规格逐项核验</td><td class="px-5 py-3 text-cyan-700">99.2%</td><td class="px-5 py-3 text-slate-500">抽样统计</td></tr>
+<tr><td class="px-5 py-3 text-slate-800">计次准确率</td><td class="px-5 py-3 text-slate-600">按需求规格逐项核验</td><td class="px-5 py-3 text-cyan-700">99.6%</td><td class="px-5 py-3 text-slate-500">含人工补录后结果</td></tr>
+<tr><td class="px-5 py-3 text-slate-800">告警时延</td><td class="px-5 py-3 text-slate-600">满足考核要求</td><td class="px-5 py-3 text-cyan-700">1.8 秒</td><td class="px-5 py-3 text-slate-500">触发至推送平均耗时</td></tr>
+<tr><td class="px-5 py-3 text-slate-800">并发接入能力</td><td class="px-5 py-3 text-slate-600">≥ 200 路</td><td class="px-5 py-3 text-cyan-700">186 路</td><td class="px-5 py-3 text-slate-500">压测场景待正式测试</td></tr>
+<tr><td class="px-5 py-3 text-slate-800">系统可用率</td><td class="px-5 py-3 text-slate-600">≥ 99.9%</td><td class="px-5 py-3 text-cyan-700">99.93%</td><td class="px-5 py-3 text-slate-500">按月度统计</td></tr>
+<tr><td class="px-5 py-3 text-slate-800">查询响应时间</td><td class="px-5 py-3 text-slate-600">≤ 2 秒</td><td class="px-5 py-3 text-cyan-700">1.4 秒</td><td class="px-5 py-3 text-slate-500">百万级流水条件</td></tr>
+<tr><td class="px-5 py-3 text-slate-800">功能实现率</td><td class="px-5 py-3 text-slate-600">100%</td><td class="px-5 py-3 text-slate-400">待验收</td><td class="px-5 py-3 text-slate-500">对照需求规格说明书逐项核验</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">验收组织与试运行</h2>
+<ul class="mt-3 space-y-2.5 text-[12px] text-slate-600">
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:check-circle-outline" width="16"></iconify-icon>功能验收：对照《需求规格说明书》逐项核验，功能实现率 100%。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:speedometer" width="16"></iconify-icon>性能验收：车牌识别准确率、计次准确率、告警时延、并发能力、可用率、查询响应全部达标。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:calendar-range" width="16"></iconify-icon>试运行：连续试运行不少于 2 个月，运行稳定、无重大缺陷。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:file-check-outline" width="16"></iconify-icon>文档验收：交付文档齐全、规范。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:account-group-outline" width="16"></iconify-icon>验收组织：甲方组织验收会议，必要时邀请外部专家，形成《项目验收报告》双方签字盖章后通过。</li>
+</ul>
+</div>
+<div class="rounded-xl border border-rose-200 bg-rose-50 p-5">
+<h2 class="text-[14px] font-semibold text-rose-900">验收不合格处理</h2>
+<ul class="mt-3 space-y-2.5 text-[12px] text-rose-800">
+<li>· 乙方整改期不超过 30 日，无偿整改。</li>
+<li>· 整改后仍不合格，甲方有权解除合同。</li>
+<li>· 解除合同时乙方退还已收款项，并支付合同总价款 10% 违约金。</li>
+</ul>
+<p class="mt-3 text-[11px] text-rose-700">以上条款摘自招标文件与合同约定，用于原型说明。</p>
+</div>
+</div>
+</section>
+<!-- 培训与售后 -->
+<section class="hidden space-y-5" id="tab-service">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">培训安排</h2>
+<p class="text-[11px] text-slate-500">3 场次 · 累计不少于 12 课时 · 现场授课 + 实操演练</p>
+<div class="mt-3 overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-4 py-2.5 whitespace-nowrap">培训对象</th>
+<th class="text-left font-normal px-4 py-2.5 whitespace-nowrap">培训重点</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">调度员</td><td class="px-4 py-3 text-slate-600">看板使用、车辆调度、作业进度跟踪</td></tr>
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">司磅员</td><td class="px-4 py-3 text-slate-600">识别结果核对、手动补录、计次确认</td></tr>
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">系统管理员</td><td class="px-4 py-3 text-slate-600">用户与权限、参数阈值、日志与备份</td></tr>
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">安全监管人员</td><td class="px-4 py-3 text-slate-600">告警分级、复核处置与数据追溯</td></tr>
+</tbody>
+</table>
+</div>
+<div class="mt-3 flex items-center justify-between text-[12px] text-slate-600 border-t border-slate-100 pt-3">
+<span>已完成场次（演示）</span>
+<span class="text-slate-800">1 / 3 场次 · 4 / 12 课时</span>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">售后与响应时效</h2>
+<div class="mt-3 overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-4 py-2.5 whitespace-nowrap">故障级别</th>
+<th class="text-left font-normal px-4 py-2.5 whitespace-nowrap">响应时效</th>
+<th class="text-left font-normal px-4 py-2.5 whitespace-nowrap">解决 / 到场</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">一般故障</td><td class="px-4 py-3 text-slate-600 whitespace-nowrap">4 小时内响应</td><td class="px-4 py-3 text-slate-600 whitespace-nowrap">8 小时内解决</td></tr>
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">重大故障</td><td class="px-4 py-3 text-slate-600 whitespace-nowrap">2 小时内响应</td><td class="px-4 py-3 text-slate-600 whitespace-nowrap">24 小时内到场处理并恢复业务</td></tr>
+<tr><td class="px-4 py-3 text-slate-800 whitespace-nowrap">服务窗口</td><td class="px-4 py-3 text-slate-600 whitespace-nowrap" colspan="2">7×24 小时</td></tr>
+</tbody>
+</table>
+</div>
+<ul class="mt-3 space-y-2 text-[12px] text-slate-600">
+<li>· 质保期内每半年一次巡检并提交巡检报告。</li>
+<li>· 免费版本升级不含新增大功能模块。</li>
+<li>· 质保期满后可按年度签订运维合同，年运维费不高于合同总价 8%。</li>
+</ul>
+<div class="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3">
+<p class="text-[12px] text-amber-800">
+                质保期口径：合同约定 12 个月，投标文件承诺延长至 18 个月，建议双方书面确认最终口径（列入待确认事项）。
+              </p>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">风险与应对要点</h2>
+<div class="mt-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">甲方硬件不满足接入条件</p>
+<p class="mt-1 text-[12px] text-slate-500">应对：乙方提前提出接入要求与参数建议，双方书面确认变更。</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">关键人员变动</p>
+<p class="mt-1 text-[12px] text-slate-500">应对：关键岗位 AB 角，项目负责人更换须甲方书面同意。</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">数据安全与保密</p>
+<p class="mt-1 text-[12px] text-slate-500">应对：内网部署、加密传输、操作审计、定期备份与全员保密承诺。</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">需求变更导致工期与成本波动</p>
+<p class="mt-1 text-[12px] text-slate-500">应对：变更书面确认，追加工作量签订补充协议。</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">接口联调延迟</p>
+<p class="mt-1 text-[12px] text-slate-500">应对：提前明确接口清单与联调计划，设立周度联调节点。</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<p class="text-[13px] font-medium text-slate-800">试运行期间缺陷处理</p>
+<p class="mt-1 text-[12px] text-slate-500">应对：问题台账登记，按级别限时修复并回归验证。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 待确认事项 -->
+<section class="hidden space-y-5" id="tab-issues">
+<div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="px-5 py-4 border-b border-slate-100">
+<h2 class="text-[14px] font-semibold text-slate-900">关键冲突项与待确认清单</h2>
+<p class="text-[11px] text-slate-500">来源：需求分析会议纪要（会议日期 2026-10-15）</p>
+</div>
+<div class="overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">序号</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">冲突 / 待确认项</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">文件依据</th>
+<th class="text-left font-normal px-5 py-2.5">建议处理</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 align-top">
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">1</td>
+<td class="px-5 py-4 text-slate-800">质保期：合同 12 个月，投标书 18 个月</td>
+<td class="px-5 py-4 text-slate-500">合同第十九条；投标书商务偏离表</td>
+<td class="px-5 py-4 text-slate-600">建议按 18 个月执行，签订补充协议明确</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">2</td>
+<td class="px-5 py-4 text-slate-800">定位精度：露天 ≤10 米 / 投标 ≤1 米</td>
+<td class="px-5 py-4 text-slate-500">合同第一条；投标书技术偏离表</td>
+<td class="px-5 py-4 text-slate-600">以 ≤10 米为验收底线；≤1 米作为正偏离承诺需明确测试条件</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">3</td>
+<td class="px-5 py-4 text-slate-800">项目负责人与投标团队表不一致</td>
+<td class="px-5 py-4 text-slate-500">合同第十七条；投标书项目团队表</td>
+<td class="px-5 py-4 text-slate-600">建议统一并书面确认，正式以合同或补充协议为准</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">4</td>
+<td class="px-5 py-4 text-slate-800">井工矿是否本期实施</td>
+<td class="px-5 py-4 text-slate-500">合同第一条；投标书重点难点第 3 条</td>
+<td class="px-5 py-4 text-slate-600">建议本期以露天围栏为主，井工矿预留二期接口</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">5</td>
+<td class="px-5 py-4 text-slate-800">告警误报率 ≤2%、复核 ≤20 秒/条是否强制验收</td>
+<td class="px-5 py-4 text-slate-500">投标书承诺</td>
+<td class="px-5 py-4 text-slate-600">建议纳入试运行考核，是否强制验收由甲方确认</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">6</td>
+<td class="px-5 py-4 text-slate-800">基础平台与通用组件授权边界</td>
+<td class="px-5 py-4 text-slate-500">合同第十条</td>
+<td class="px-5 py-4 text-slate-600">需在合同附件中列明既有基础平台、通用组件清单及授权范围</td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-4 text-slate-500">7</td>
+<td class="px-5 py-4 text-slate-800">合同空白项</td>
+<td class="px-5 py-4 text-slate-500">合同文本</td>
+<td class="px-5 py-4 text-slate-600">逐项补充确认后签署，避免执行期争议</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">会议结论摘要</h2>
+<ul class="mt-3 space-y-2.5 text-[12px] text-slate-600">
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:check" width="16"></iconify-icon>会议覆盖项目背景、范围、三大核心、八大模块、接口、性能、安全、验收、培训、售后、进度与风险。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:check" width="16"></iconify-icon>形成需求基线草案 V0.9，待冲突项书面确认后冻结为 V1.0。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:check" width="16"></iconify-icon>甲方按合同约定在 10 个工作日内提供技术资料与协作事项；乙方在 10 日内提交研究开发计划 / 项目实施方案。</li>
+<li class="flex gap-2"><iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:check" width="16"></iconify-icon>建立周例会、项目周报、问题台账与里程碑评审机制。</li>
+</ul>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">本项目原型范围说明</h2>
+<p class="mt-2 text-[12px] text-slate-600 leading-relaxed">
+              本原型依据《矿井货车倒矿智能管控系统开发项目需求分析》《需求分析会议纪要 2》与招标文件整理生成，用于演示服务端 Web 管理端、可视化看板与移动端 H5 的信息结构与交互方式。
+              页面中出现的车牌、车辆、司机、点位与统计数值均为演示数据，不代表真实生产数据；涉及冲突或未确认的条款，均以「待确认」标注呈现。
+            </p>
+<div class="mt-4 flex flex-wrap gap-2">
+<a class="rounded-lg border border-slate-200 px-3 py-2 text-[12px] text-slate-600 hover:bg-slate-50" href="home.html">返回工作台</a>
+<a class="rounded-lg bg-slate-900 px-3 py-2 text-[12px] text-white hover:bg-slate-800" href="dashboard.html">查看可视化看板</a>
+</div>
+</div>
+</div>
+</section>
+<p class="text-[11px] text-slate-400 pb-2">
+        招标人：华盛矿业（集团）有限公司 · 招标编号 HXKY-ZB-2026-0325 · 企业自主公开招标 · 服务类（软件开发）
+      </p>
+</main>
+</div>
+</div>
+<script>
+  var tabs = document.querySelectorAll('.proj-tab');
+  var panels = {
+    overview: document.getElementById('tab-overview'),
+    milestone: document.getElementById('tab-milestone'),
+    delivery: document.getElementById('tab-delivery'),
+    service: document.getElementById('tab-service'),
+    issues: document.getElementById('tab-issues')
+  };
+
+  function switchTab(key) {
+    for (var name in panels) {
+      if (panels.hasOwnProperty(name)) {
+        if (name === key) {
+          panels[name].classList.remove('hidden');
+        } else {
+          panels[name].classList.add('hidden');
+        }
+      }
+    }
+    for (var i = 0; i < tabs.length; i++) {
+      if (tabs[i].getAttribute('data-tab') === key) {
+        tabs[i].classList.add('active');
+      } else {
+        tabs[i].classList.remove('active');
+      }
+    }
+  }
+
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function () {
+      switchTab(this.getAttribute('data-tab'));
+    });
+  }
+</script>
+</body>
+</html>

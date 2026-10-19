@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+<html class="w-full h-full" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>移动端 H5 演示 · 矿井货车倒矿智能管控系统</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  .phone-tab.active { color: #0e7490; }
+  .phone-tab.active .tab-icon { color: #0e7490; }
+</style>
+</head>
+<body class="w-full h-full overflow-hidden bg-slate-100 text-slate-800">
+<div class="flex w-full h-full">
+<aside class="w-[248px] shrink-0 h-full bg-slate-900 flex flex-col">
+<div class="h-16 shrink-0 flex items-center gap-3 px-5 border-b border-white/10">
+<div class="w-9 h-9 rounded-lg bg-cyan-600 grid place-items-center text-white">
+<iconify-icon icon="mdi:dump-truck" width="22"></iconify-icon>
+</div>
+<div class="leading-tight">
+<p class="text-white text-[13px] font-semibold">矿井货车倒矿</p>
+<p class="text-slate-400 text-[11px]">智能管控系统</p>
+</div>
+</div>
+<nav class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4 px-3 space-y-1">
+<p class="px-3 pb-1 text-[11px] tracking-wider text-slate-500">概览</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="home.html">
+<iconify-icon icon="mdi:view-dashboard-outline" width="18"></iconify-icon>工作台
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="dashboard.html">
+<iconify-icon icon="mdi:chart-areaspline" width="18"></iconify-icon>可视化看板
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">业务管控</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="recognition.html">
+<iconify-icon icon="mdi:car-connected" width="18"></iconify-icon>车牌识别计次
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="vehicles.html">
+<iconify-icon icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>车辆定位管控
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="alarms.html">
+<iconify-icon icon="mdi:alert-outline" width="18"></iconify-icon>告警与复核
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="statistics.html">
+<iconify-icon icon="mdi:chart-bar" width="18"></iconify-icon>统计与报表
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">终端与项目</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] bg-cyan-600 text-white" href="mobile.html">
+<iconify-icon icon="mdi:cellphone" width="18"></iconify-icon>移动端 H5
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="project.html">
+<iconify-icon icon="mdi:clipboard-check-outline" width="18"></iconify-icon>项目实施与验收
+      </a>
+</nav>
+<div class="p-3 border-t border-white/10">
+<div class="rounded-lg bg-white/5 p-3">
+<p class="text-[11px] text-slate-400 leading-relaxed">内网部署 · 演示数据<br/>需求基线草案 V0.9</p>
+</div>
+</div>
+</aside>
+<div class="flex-1 min-w-0 h-full flex flex-col">
+<header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+<div>
+<h1 class="text-[15px] font-semibold text-slate-900">移动端 H5 现场作业</h1>
+<p class="text-[12px] text-slate-500">面向调度员、司磅员、安全监管人员的轻量现场操作演示</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+<iconify-icon icon="mdi:information-outline" width="14"></iconify-icon>演示数据
+        </span>
+<div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white grid place-items-center text-[12px]">员</div>
+<div class="leading-tight">
+<p class="text-[12px] font-medium text-slate-800">司磅员 · 张师傅</p>
+<p class="text-[11px] text-slate-500">2 号计量点</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden p-6">
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+<!-- 左：说明 -->
+<section class="xl:col-span-3 space-y-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">使用场景</h2>
+<ul class="mt-3 space-y-3 text-[12px] text-slate-600">
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:account-hard-hat-outline" width="16"></iconify-icon>
+<span><b class="font-medium text-slate-800">司磅员</b>：计量点核对识别结果、手动补录、生成计次。</span>
+</li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:clipboard-text-clock-outline" width="16"></iconify-icon>
+<span><b class="font-medium text-slate-800">调度员</b>：查看当班作业进度、点位排队与车辆在途情况。</span>
+</li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:shield-alert-outline" width="16"></iconify-icon>
+<span><b class="font-medium text-slate-800">安全监管人员</b>：接收告警推送并现场复核，上传处置说明。</span>
+</li>
+</ul>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">技术说明</h2>
+<ul class="mt-3 space-y-2 text-[12px] text-slate-600">
+<li>· 移动端形态为 H5，与服务端 Web 管理端共用同一套业务接口。</li>
+<li>· 仅在内网环境访问，登录沿用系统统一账号与角色权限。</li>
+<li>· 弱网环境支持本地缓存补录，恢复联网后自动同步。</li>
+<li>· 告警推送与复核结果实时回写服务端，纳入审计日志。</li>
+</ul>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">演示导航</h2>
+<p class="mt-1 text-[11px] text-slate-500">点击右侧手机底部标签可切换页面</p>
+<div class="mt-3 space-y-2">
+<button class="jump-btn w-full text-left rounded-lg border border-slate-200 px-3 py-2 text-[12px] text-slate-700 hover:bg-slate-50" data-jump="job">
+                作业首页 · 今日任务与快捷操作
+              </button>
+<button class="jump-btn w-full text-left rounded-lg border border-slate-200 px-3 py-2 text-[12px] text-slate-700 hover:bg-slate-50" data-jump="alarm">
+                告警复核 · 待复核告警与处置
+              </button>
+<button class="jump-btn w-full text-left rounded-lg border border-slate-200 px-3 py-2 text-[12px] text-slate-700 hover:bg-slate-50" data-jump="me">
+                我的 · 账号、班次与设置
+              </button>
+</div>
+</div>
+</section>
+<!-- 中：手机 -->
+<section class="xl:col-span-5 flex justify-center">
+<div class="relative w-[380px] max-w-full">
+<div class="w-[380px] max-w-full h-[760px] max-h-[calc(100vh-180px)] rounded-[42px] bg-slate-900 p-3 shadow-2xl">
+<div class="w-full h-full rounded-[32px] bg-slate-50 overflow-hidden flex flex-col relative">
+<!-- 状态栏 -->
+<div class="shrink-0 h-8 px-5 flex items-center justify-between text-[11px] text-slate-700 bg-white">
+<span>16:42</span>
+<div class="flex items-center gap-1.5">
+<iconify-icon icon="mdi:signal" width="13"></iconify-icon>
+<iconify-icon icon="mdi:wifi" width="13"></iconify-icon>
+<iconify-icon icon="mdi:battery-70" width="15"></iconify-icon>
+</div>
+</div>
+<!-- 应用头 -->
+<div class="shrink-0 bg-white px-4 pb-3 border-b border-slate-200">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-[15px] font-semibold text-slate-900">倒矿作业</p>
+<p class="text-[11px] text-slate-500">2 号计量点 · 白班 08:00-16:00</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="relative w-8 h-8 rounded-full bg-slate-100 grid place-items-center text-slate-500">
+<iconify-icon icon="mdi:bell-outline" width="16"></iconify-icon>
+<span class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] grid place-items-center">3</span>
+</span>
+<span class="w-8 h-8 rounded-full bg-cyan-700 text-white grid place-items-center text-[11px]">张</span>
+</div>
+</div>
+</div>
+<!-- 页面容器 -->
+<div class="flex-1 min-h-0">
+<!-- 作业首页 -->
+<div class="h-full overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden px-4 py-4 space-y-3" id="screen-job">
+<div class="rounded-xl bg-gradient-to-br from-cyan-700 to-cyan-900 p-4 text-white">
+<p class="text-[11px] text-cyan-100">今日我的计次</p>
+<p class="mt-1 text-[28px] font-semibold leading-none">12<span class="text-[13px] font-normal ml-1">车</span></p>
+<div class="mt-3 flex items-center gap-4 text-[11px] text-cyan-50">
+<span>待补录 1 条</span>
+<span>识别复核 2 条</span>
+<span>在点车辆 6 台</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="quick-btn rounded-xl border border-slate-200 bg-white p-3 text-left hover:bg-slate-50">
+<iconify-icon class="text-cyan-700" icon="mdi:line-scan" width="20"></iconify-icon>
+<p class="mt-1.5 text-[13px] text-slate-800">扫码识别</p>
+<p class="text-[11px] text-slate-400">调用相机识牌</p>
+</button>
+<button class="quick-btn rounded-xl border border-slate-200 bg-white p-3 text-left hover:bg-slate-50">
+<iconify-icon class="text-cyan-700" icon="mdi:keyboard-outline" width="20"></iconify-icon>
+<p class="mt-1.5 text-[13px] text-slate-800">手动补录</p>
+<p class="text-[11px] text-slate-400">识别失败补录</p>
+</button>
+<button class="quick-btn rounded-xl border border-slate-200 bg-white p-3 text-left hover:bg-slate-50">
+<iconify-icon class="text-cyan-700" icon="mdi:camera-outline" width="20"></iconify-icon>
+<p class="mt-1.5 text-[13px] text-slate-800">拍照取证</p>
+<p class="text-[11px] text-slate-400">上传现场照片</p>
+</button>
+<button class="quick-btn rounded-xl border border-slate-200 bg-white p-3 text-left hover:bg-slate-50">
+<iconify-icon class="text-cyan-700" icon="mdi:map-marker-alert-outline" width="20"></iconify-icon>
+<p class="mt-1.5 text-[13px] text-slate-800">点位上报</p>
+<p class="text-[11px] text-slate-400">异常情况上报</p>
+</button>
+</div>
+<div class="rounded-xl border border-amber-200 bg-amber-50 p-3">
+<div class="flex items-center justify-between">
+<p class="text-[12px] font-medium text-amber-800">待补录记录</p>
+<span class="text-[11px] text-amber-700">1 条</span>
+</div>
+<p class="mt-1 text-[11px] text-amber-700">豫 C·M602 挂 · 16:29 · 置信度 61.8%</p>
+<button class="supply-btn mt-2 w-full rounded-lg bg-amber-500 text-white text-[12px] py-1.5">立即补录</button>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="px-3 py-2.5 border-b border-slate-100 flex items-center justify-between">
+<p class="text-[12px] font-medium text-slate-800">今日流水</p>
+<span class="text-[11px] text-slate-400">最近 5 条</span>
+</div>
+<ul class="divide-y divide-slate-100">
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">豫 C·8F23 挂</p>
+<p class="text-[11px] text-slate-400">16:38 · 第 12 车</p>
+</div>
+<span class="text-[11px] text-emerald-600">已计次</span>
+</li>
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">豫 C·A309 挂</p>
+<p class="text-[11px] text-slate-400">16:34 · 第 7 车</p>
+</div>
+<span class="text-[11px] text-emerald-600">已计次</span>
+</li>
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">豫 C·K118 挂</p>
+<p class="text-[11px] text-slate-400">16:31 · 第 5 车</p>
+</div>
+<span class="text-[11px] text-emerald-600">已计次</span>
+</li>
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">豫 C·H204 挂</p>
+<p class="text-[11px] text-slate-400">16:26 · 第 11 车</p>
+</div>
+<span class="text-[11px] text-emerald-600">已计次</span>
+</li>
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">豫 C·T556 挂</p>
+<p class="text-[11px] text-slate-400">16:22 · 第 6 车</p>
+</div>
+<span class="text-[11px] text-amber-600">待复核</span>
+</li>
+</ul>
+</div>
+<div class="h-2"></div>
+</div>
+<!-- 告警复核 -->
+<div class="hidden h-full overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden px-4 py-4 space-y-3" id="screen-alarm">
+<div class="grid grid-cols-3 gap-3">
+<div class="rounded-xl border border-slate-200 bg-white p-3 text-center">
+<p class="text-[18px] font-semibold text-slate-900">3</p>
+<p class="text-[11px] text-slate-500">待复核</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-3 text-center">
+<p class="text-[18px] font-semibold text-slate-900">9</p>
+<p class="text-[11px] text-slate-500">今日已处理</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-3 text-center">
+<p class="text-[18px] font-semibold text-slate-900">14s</p>
+<p class="text-[11px] text-slate-500">平均复核</p>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="px-3 py-2.5 border-b border-slate-100 flex items-center justify-between">
+<p class="text-[12px] font-medium text-slate-800">待复核告警</p>
+<span class="text-[11px] text-amber-600">3 条</span>
+</div>
+<ul class="divide-y divide-slate-100">
+<li class="px-3 py-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<p class="text-[12px] font-medium text-slate-800">车辆滞留超时</p>
+<p class="mt-0.5 text-[11px] text-slate-400">1 号卸矿平台 · 16:21 · 豫 C·8F23 挂</p>
+</div>
+<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 shrink-0">紧急</span>
+</div>
+<button class="review-btn mt-2 w-full rounded-lg bg-cyan-700 text-white text-[12px] py-1.5">复核处置</button>
+</li>
+<li class="px-3 py-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<p class="text-[12px] font-medium text-slate-800">识别置信度偏低</p>
+<p class="mt-0.5 text-[11px] text-slate-400">2 号计量点 · 15:47 · 豫 C·P771 挂</p>
+</div>
+<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 shrink-0">重要</span>
+</div>
+<button class="review-btn mt-2 w-full rounded-lg bg-cyan-700 text-white text-[12px] py-1.5">复核处置</button>
+</li>
+<li class="px-3 py-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<p class="text-[12px] font-medium text-slate-800">点位外停留</p>
+<p class="mt-0.5 text-[11px] text-slate-400">北侧电子围栏 · 15:12 · 豫 C·A309 挂</p>
+</div>
+<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 shrink-0">一般</span>
+</div>
+<button class="review-btn mt-2 w-full rounded-lg bg-cyan-700 text-white text-[12px] py-1.5">复核处置</button>
+</li>
+</ul>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="px-3 py-2.5 border-b border-slate-100">
+<p class="text-[12px] font-medium text-slate-800">今日已处理</p>
+</div>
+<ul class="divide-y divide-slate-100">
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">定位偏差超限</p>
+<p class="text-[11px] text-slate-400">14:58 · 3 号排土点</p>
+</div>
+<span class="text-[11px] text-slate-500">误报</span>
+</li>
+<li class="px-3 py-2.5 flex items-center justify-between">
+<div>
+<p class="text-[12px] text-slate-800">识别置信度偏低</p>
+<p class="text-[11px] text-slate-400">14:31 · 北侧装车点</p>
+</div>
+<span class="text-[11px] text-emerald-600">真实告警</span>
+</li>
+</ul>
+</div>
+<div class="h-2"></div>
+</div>
+<!-- 我的 -->
+<div class="hidden h-full overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden px-4 py-4 space-y-3" id="screen-me">
+<div class="rounded-xl border border-slate-200 bg-white p-4 flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-cyan-700 text-white grid place-items-center text-[16px]">张</div>
+<div>
+<p class="text-[14px] font-semibold text-slate-900">张师傅</p>
+<p class="text-[11px] text-slate-500">司磅员 · 工号 D-0231 · 2 号计量点</p>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<p class="text-[12px] text-slate-500">当前班次</p>
+<p class="mt-1 text-[14px] font-medium text-slate-900">白班 08:00 - 16:00</p>
+<div class="mt-3 flex items-center gap-2">
+<div class="flex-1 h-1.5 rounded-full bg-slate-100">
+<div class="h-1.5 rounded-full bg-cyan-600" style="width:96%"></div>
+</div>
+<span class="text-[11px] text-slate-500">剩余 18 分钟</span>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<ul class="divide-y divide-slate-100 text-[13px]">
+<li class="px-4 py-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-slate-700">
+<iconify-icon class="text-slate-400" icon="mdi:bell-ring-outline" width="16"></iconify-icon>消息推送设置
+                          </span>
+<iconify-icon class="text-slate-300" icon="mdi:chevron-right" width="18"></iconify-icon>
+</li>
+<li class="px-4 py-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-slate-700">
+<iconify-icon class="text-slate-400" icon="mdi:cloud-off-outline" width="16"></iconify-icon>离线缓存记录
+                          </span>
+<span class="text-[11px] text-slate-400">1 条待同步</span>
+</li>
+<li class="px-4 py-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-slate-700">
+<iconify-icon class="text-slate-400" icon="mdi:book-open-page-variant-outline" width="16"></iconify-icon>操作手册与培训
+                          </span>
+<iconify-icon class="text-slate-300" icon="mdi:chevron-right" width="18"></iconify-icon>
+</li>
+<li class="px-4 py-3 flex items-center justify-between">
+<span class="inline-flex items-center gap-2 text-slate-700">
+<iconify-icon class="text-slate-400" icon="mdi:information-outline" width="16"></iconify-icon>版本信息
+                          </span>
+<span class="text-[11px] text-slate-400">H5 v1.0.0（演示）</span>
+</li>
+</ul>
+</div>
+<button class="w-full rounded-xl border border-slate-200 bg-white py-2.5 text-[13px] text-slate-500">退出登录</button>
+<p class="text-center text-[10px] text-slate-400">华盛矿业（集团）有限公司 · 内网访问</p>
+<div class="h-2"></div>
+</div>
+</div>
+<!-- 底部标签 -->
+<div class="shrink-0 bg-white border-t border-slate-200 grid grid-cols-3">
+<button class="tab-btn phone-tab active py-2 flex flex-col items-center gap-0.5 text-slate-400" data-screen="job">
+<iconify-icon class="tab-icon" icon="mdi:clipboard-text-outline" width="20"></iconify-icon>
+<span class="text-[10px]">作业</span>
+</button>
+<button class="tab-btn phone-tab py-2 flex flex-col items-center gap-0.5 text-slate-400" data-screen="alarm">
+<iconify-icon class="tab-icon" icon="mdi:alert-outline" width="20"></iconify-icon>
+<span class="text-[10px]">告警</span>
+</button>
+<button class="tab-btn phone-tab py-2 flex flex-col items-center gap-0.5 text-slate-400" data-screen="me">
+<iconify-icon class="tab-icon" icon="mdi:account-outline" width="20"></iconify-icon>
+<span class="text-[10px]">我的</span>
+</button>
+</div>
+<!-- 手机内提示 -->
+<div class="hidden absolute bottom-24 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-900/90 px-4 py-2 text-[11px] text-white" id="phoneToast"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- 右：说明 -->
+<section class="xl:col-span-4 space-y-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">页面清单</h2>
+<ul class="mt-3 space-y-3 text-[12px] text-slate-600">
+<li class="rounded-lg border border-slate-200 p-3">
+<p class="text-[13px] font-medium text-slate-800">作业首页</p>
+<p class="mt-1">今日计次概览、扫码识别 / 手动补录 / 拍照取证 / 点位上报四项快捷操作、待补录提醒与今日流水。</p>
+</li>
+<li class="rounded-lg border border-slate-200 p-3">
+<p class="text-[13px] font-medium text-slate-800">告警复核</p>
+<p class="mt-1">展示待复核告警与处置入口，可按级别查看，复核结论回写服务端。</p>
+</li>
+<li class="rounded-lg border border-slate-200 p-3">
+<p class="text-[13px] font-medium text-slate-800">我的</p>
+<p class="mt-1">账号与班次信息、消息推送、离线缓存、操作手册与版本信息。</p>
+</li>
+</ul>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">与服务端的协同</h2>
+<ul class="mt-3 space-y-2.5 text-[12px] text-slate-600">
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:sync" width="16"></iconify-icon>
+                识别与计次结果由服务端统一生成，移动端仅做核对与补录。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:shield-check-outline" width="16"></iconify-icon>
+                所有操作留痕，可追溯到人、时间与设备。
+              </li>
+<li class="flex gap-2">
+<iconify-icon class="text-cyan-600 mt-0.5 shrink-0" icon="mdi:chart-timeline-variant" width="16"></iconify-icon>
+                作业数据实时汇入可视化看板与统计报表。
+              </li>
+</ul>
+<div class="mt-4 flex gap-2">
+<a class="flex-1 text-center rounded-lg border border-slate-200 py-2 text-[12px] text-slate-600 hover:bg-slate-50" href="home.html">返回工作台</a>
+<a class="flex-1 text-center rounded-lg bg-slate-900 py-2 text-[12px] text-white hover:bg-slate-800" href="alarms.html">服务端复核</a>
+</div>
+</div>
+<div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+<h2 class="text-[14px] font-semibold text-amber-900">培训覆盖角色</h2>
+<p class="mt-2 text-[12px] text-amber-800 leading-relaxed">
+              按合同要求，项目提供 3 场次、累计不少于 12 课时的培训，对象包含调度员、司磅员、系统管理员与安全监管人员，采用现场授课与实操演练结合方式。
+            </p>
+<a class="mt-3 inline-flex items-center gap-1 text-[12px] text-amber-900 hover:underline" href="project.html">
+              查看培训与运维条款<iconify-icon icon="mdi:arrow-right" width="14"></iconify-icon>
+</a>
+</div>
+</section>
+</div>
+<p class="mt-5 text-[11px] text-slate-400">移动端界面为原型演示，数据为模拟数据。</p>
+</main>
+</div>
+</div>
+<script>
+  var screens = {
+    job: document.getElementById('screen-job'),
+    alarm: document.getElementById('screen-alarm'),
+    me: document.getElementById('screen-me')
+  };
+  var tabs = document.querySelectorAll('.tab-btn');
+  var phoneToast = document.getElementById('phoneToast');
+  var toastTimer = null;
+
+  function showPhoneToast(msg) {
+    phoneToast.textContent = msg;
+    phoneToast.classList.remove('hidden');
+    if (toastTimer) { clearTimeout(toastTimer); }
+    toastTimer = setTimeout(function () { phoneToast.classList.add('hidden'); }, 1800);
+  }
+
+  function switchScreen(key) {
+    for (var name in screens) {
+      if (screens.hasOwnProperty(name)) {
+        if (name === key) {
+          screens[name].classList.remove('hidden');
+        } else {
+          screens[name].classList.add('hidden');
+        }
+      }
+    }
+    for (var i = 0; i < tabs.length; i++) {
+      if (tabs[i].getAttribute('data-screen') === key) {
+        tabs[i].classList.add('active');
+      } else {
+        tabs[i].classList.remove('active');
+      }
+    }
+  }
+
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function () {
+      switchScreen(this.getAttribute('data-screen'));
+    });
+  }
+
+  var jumpButtons = document.querySelectorAll('.jump-btn');
+  for (var j = 0; j < jumpButtons.length; j++) {
+    jumpButtons[j].addEventListener('click', function () {
+      switchScreen(this.getAttribute('data-jump'));
+    });
+  }
+
+  var quickButtons = document.querySelectorAll('.quick-btn');
+  for (var k = 0; k < quickButtons.length; k++) {
+    quickButtons[k].addEventListener('click', function () {
+      var label = this.querySelector('p').textContent;
+      showPhoneToast(label + '：功能演示入口');
+    });
+  }
+
+  var supplyBtn = document.querySelector('.supply-btn');
+  if (supplyBtn) {
+    supplyBtn.addEventListener('click', function () {
+      showPhoneToast('补录提交成功，已生成计次记录（演示）');
+    });
+  }
+
+  var reviewButtons = document.querySelectorAll('.review-btn');
+  for (var n = 0; n < reviewButtons.length; n++) {
+    reviewButtons[n].addEventListener('click', function () {
+      showPhoneToast('复核结论已提交（演示）');
+    });
+  }
+</script>
+</body>
+</html>

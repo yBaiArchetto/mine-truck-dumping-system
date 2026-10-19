@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html class="w-full h-full" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>工作台总览 · 矿井货车倒矿智能管控系统</title>
+<script src="https://modao.cc/agent-py/static/source/js/tailwindcss.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/iconify-icon.min.js"></script>
+<script src="https://modao.cc/agent-py/static/source/js/echarts.min.js"></script>
+<style>
+  html, body { height: 100%; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+</style>
+</head>
+<body class="w-full h-full overflow-hidden bg-slate-100 text-slate-800">
+<div class="flex w-full h-full">
+<!-- 侧边导航 -->
+<aside class="w-[248px] shrink-0 h-full bg-slate-900 flex flex-col">
+<div class="h-16 shrink-0 flex items-center gap-3 px-5 border-b border-white/10">
+<div class="w-9 h-9 rounded-lg bg-cyan-600 grid place-items-center text-white">
+<iconify-icon icon="mdi:dump-truck" width="22"></iconify-icon>
+</div>
+<div class="leading-tight">
+<p class="text-white text-[13px] font-semibold">矿井货车倒矿</p>
+<p class="text-slate-400 text-[11px]">智能管控系统</p>
+</div>
+</div>
+<nav class="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4 px-3 space-y-1">
+<p class="px-3 pb-1 text-[11px] tracking-wider text-slate-500">概览</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] bg-cyan-600 text-white" href="home.html">
+<iconify-icon icon="mdi:view-dashboard-outline" width="18"></iconify-icon>工作台
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="dashboard.html">
+<iconify-icon icon="mdi:chart-areaspline" width="18"></iconify-icon>可视化看板
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">业务管控</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="recognition.html">
+<iconify-icon icon="mdi:car-connected" width="18"></iconify-icon>车牌识别计次
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="vehicles.html">
+<iconify-icon icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>车辆定位管控
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="alarms.html">
+<iconify-icon icon="mdi:alert-outline" width="18"></iconify-icon>告警与复核
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="statistics.html">
+<iconify-icon icon="mdi:chart-bar" width="18"></iconify-icon>统计与报表
+      </a>
+<p class="px-3 pt-4 pb-1 text-[11px] tracking-wider text-slate-500">终端与项目</p>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="mobile.html">
+<iconify-icon icon="mdi:cellphone" width="18"></iconify-icon>移动端 H5
+      </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition-colors hover:bg-white/10 hover:text-white" href="project.html">
+<iconify-icon icon="mdi:clipboard-check-outline" width="18"></iconify-icon>项目实施与验收
+      </a>
+</nav>
+<div class="p-3 border-t border-white/10">
+<div class="rounded-lg bg-white/5 p-3">
+<p class="text-[11px] text-slate-400 leading-relaxed">内网部署 · 演示数据<br/>需求基线草案 V0.9</p>
+</div>
+</div>
+</aside>
+<!-- 主区域 -->
+<div class="flex-1 min-w-0 h-full flex flex-col">
+<header class="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+<div>
+<h1 class="text-[15px] font-semibold text-slate-900">工作台总览</h1>
+<p class="text-[12px] text-slate-500">掌握全矿倒矿作业、识别计次与告警复核运行情况</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-[12px] text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+<iconify-icon icon="mdi:information-outline" width="14"></iconify-icon>演示数据
+        </span>
+<button class="w-9 h-9 rounded-lg border border-slate-200 grid place-items-center text-slate-500 hover:bg-slate-50 relative">
+<iconify-icon icon="mdi:bell-outline" width="18"></iconify-icon>
+<span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] grid place-items-center">3</span>
+</button>
+<div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+<div class="w-8 h-8 rounded-full bg-slate-800 text-white grid place-items-center text-[12px]">管</div>
+<div class="leading-tight">
+<p class="text-[12px] font-medium text-slate-800">系统管理员</p>
+<p class="text-[11px] text-slate-500">调度中心</p>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden p-6 space-y-5">
+<!-- 工具条 -->
+<div class="flex flex-wrap items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<span class="text-[13px] text-slate-500">统计周期</span>
+<div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5">
+<button class="range-btn rounded-md px-3 py-1.5 text-[12px] bg-slate-900 text-white" data-range="today">今日</button>
+<button class="range-btn rounded-md px-3 py-1.5 text-[12px] text-slate-600 hover:bg-slate-50" data-range="week">近 7 日</button>
+<button class="range-btn rounded-md px-3 py-1.5 text-[12px] text-slate-600 hover:bg-slate-50" data-range="month">近 30 日</button>
+</div>
+</div>
+<p class="text-[12px] text-slate-500">数据更新于 2026-10-15 16:42 · 演示数据</p>
+</div>
+<!-- 核心指标 -->
+<section class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">今日倒矿车次</p>
+<iconify-icon class="text-cyan-600" icon="mdi:dump-truck" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">386<span class="text-[13px] text-slate-500 font-normal ml-1">车</span></p>
+<p class="mt-2 text-[11px] text-emerald-600">环比昨日 +4.2%</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">车牌识别准确率</p>
+<iconify-icon class="text-cyan-600" icon="mdi:license" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">99.2<span class="text-[13px] text-slate-500 font-normal ml-0.5">%</span></p>
+<p class="mt-2 text-[11px] text-slate-500">抽样 386 车 · 识别失败 3 车</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">自动计次准确率</p>
+<iconify-icon class="text-cyan-600" icon="mdi:counter" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">99.6<span class="text-[13px] text-slate-500 font-normal ml-0.5">%</span></p>
+<p class="mt-2 text-[11px] text-slate-500">待人工补录 2 条</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">待复核告警</p>
+<iconify-icon class="text-amber-500" icon="mdi:alert-outline" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-amber-600 leading-none">3<span class="text-[13px] text-slate-500 font-normal ml-1">条</span></p>
+<p class="mt-2 text-[11px] text-slate-500">今日累计告警 23 条</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">在线车辆</p>
+<iconify-icon class="text-emerald-600" icon="mdi:map-marker-radius-outline" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">42<span class="text-[13px] text-slate-500 font-normal">/45</span></p>
+<p class="mt-2 text-[11px] text-rose-500">离线 3 台需核查</p>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-4">
+<div class="flex items-center justify-between">
+<p class="text-[12px] text-slate-500">平均告警时延</p>
+<iconify-icon class="text-cyan-600" icon="mdi:timer-outline" width="18"></iconify-icon>
+</div>
+<p class="mt-2 text-[26px] font-semibold text-slate-900 leading-none">1.8<span class="text-[13px] text-slate-500 font-normal ml-0.5">s</span></p>
+<p class="mt-2 text-[11px] text-emerald-600">满足考核要求</p>
+</div>
+</section>
+<!-- 趋势 + 待复核 -->
+<section class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+<div class="xl:col-span-2 rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">倒矿作业与识别次数趋势</h2>
+<p class="text-[11px] text-slate-500">单位：车次 / 次 · 数据口径为演示抽样</p>
+</div>
+<a class="text-[12px] text-cyan-700 hover:underline" href="statistics.html">查看统计报表</a>
+</div>
+<div class="mt-3 w-full h-[268px]" id="trendChart"></div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5 flex flex-col">
+<div class="flex items-center justify-between">
+<h2 class="text-[14px] font-semibold text-slate-900">待复核告警</h2>
+<span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">3 条待处理</span>
+</div>
+<ul class="mt-4 space-y-3 flex-1">
+<li class="rounded-lg border border-slate-200 p-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<p class="text-[13px] font-medium text-slate-800">车辆滞留超时</p>
+<p class="mt-1 text-[11px] text-slate-500">1 号卸矿平台 · 豫 C·8F23 挂 · 16:21</p>
+</div>
+<span class="shrink-0 text-[11px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">紧急</span>
+</div>
+</li>
+<li class="rounded-lg border border-slate-200 p-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<p class="text-[13px] font-medium text-slate-800">识别置信度偏低</p>
+<p class="mt-1 text-[11px] text-slate-500">2 号计量点 · 豫 C·P771 挂 · 15:47</p>
+</div>
+<span class="shrink-0 text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">重要</span>
+</div>
+</li>
+<li class="rounded-lg border border-slate-200 p-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<p class="text-[13px] font-medium text-slate-800">点位外停留</p>
+<p class="mt-1 text-[11px] text-slate-500">北侧电子围栏 · 豫 C·A309 挂 · 15:12</p>
+</div>
+<span class="shrink-0 text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">一般</span>
+</div>
+</li>
+</ul>
+<a class="mt-4 block text-center rounded-lg bg-slate-900 text-white text-[13px] py-2.5 hover:bg-slate-800" href="alarms.html">
+            进入告警复核
+          </a>
+</div>
+</section>
+<!-- 点位 / 现场 / 运行状态 -->
+<section class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">各点位今日作业量</h2>
+<p class="text-[11px] text-slate-500">单位：车次</p>
+<div class="mt-2 w-full h-[196px]" id="siteChart"></div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<h2 class="text-[14px] font-semibold text-slate-900">现场视频通道</h2>
+<span class="text-[11px] text-emerald-600 inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>3 路在线
+            </span>
+</div>
+<div class="relative mt-3 h-[196px] overflow-hidden rounded-lg bg-gradient-to-br from-slate-700 via-slate-800 to-cyan-900">
+<img alt="Open-pit mine dump platform with truck operating on site" class="absolute inset-0 w-full h-full object-cover opacity-70" src="https://modao.cc/agent-py/media/generated_images/2026-10-12/81ce32356d994632b1507eed8e2e0230.jpg"/>
+<div class="relative h-full p-3 flex flex-col justify-between">
+<span class="self-start inline-flex items-center gap-1 rounded-full bg-black/45 px-2.5 py-1 text-[11px] text-white">
+<iconify-icon icon="mdi:video-outline" width="13"></iconify-icon>1 号卸矿平台
+              </span>
+<div class="rounded-md bg-black/45 px-2.5 py-1.5">
+<p class="text-[11px] text-white">通道状态正常 · 演示画面</p>
+<p class="text-[10px] text-slate-300">AI 识别服务在线，帧率 25fps</p>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-xl border border-slate-200 bg-white p-5">
+<h2 class="text-[14px] font-semibold text-slate-900">系统运行状态</h2>
+<p class="text-[11px] text-slate-500">内网部署 · 服务健康巡检</p>
+<ul class="mt-4 divide-y divide-slate-100">
+<li class="flex items-center justify-between py-2.5">
+<span class="text-[13px] text-slate-700">车牌识别服务</span>
+<span class="text-[12px] text-emerald-600 inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>正常
+              </span>
+</li>
+<li class="flex items-center justify-between py-2.5">
+<span class="text-[13px] text-slate-700">车辆定位接入服务</span>
+<span class="text-[12px] text-emerald-600 inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>正常
+              </span>
+</li>
+<li class="flex items-center justify-between py-2.5">
+<span class="text-[13px] text-slate-700">计次与业务接口</span>
+<span class="text-[12px] text-amber-600 inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>延迟偏高
+              </span>
+</li>
+<li class="flex items-center justify-between py-2.5">
+<span class="text-[13px] text-slate-700">数据库与备份</span>
+<span class="text-[12px] text-emerald-600 inline-flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>正常
+              </span>
+</li>
+</ul>
+<div class="mt-3 rounded-lg bg-slate-50 border border-slate-200 p-3">
+<p class="text-[11px] text-slate-600">7×24 小时服务响应机制已启用：一般故障 4 小时响应 / 8 小时解决，重大故障 2 小时响应 / 24 小时到场。</p>
+</div>
+</div>
+</section>
+<!-- 性能指标 -->
+<section class="rounded-xl border border-slate-200 bg-white p-5">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">关键性能与验收指标达标情况</h2>
+<p class="text-[11px] text-slate-500">对照《需求规格说明书》逐项核验，功能实现率要求 100%</p>
+</div>
+<a class="text-[12px] text-cyan-700 hover:underline" href="project.html">查看验收标准</a>
+</div>
+<div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<div class="rounded-lg border border-slate-200 p-4">
+<div class="flex items-center justify-between text-[12px]">
+<span class="text-slate-600">并发接入能力</span>
+<span class="text-slate-900 font-medium">186 / 200 路</span>
+</div>
+<div class="mt-2 h-1.5 rounded-full bg-slate-100">
+<div class="h-1.5 rounded-full bg-cyan-600" style="width:93%"></div>
+</div>
+<p class="mt-2 text-[11px] text-slate-500">目标 ≥ 200 路，演示值仅供参考</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<div class="flex items-center justify-between text-[12px]">
+<span class="text-slate-600">系统可用率</span>
+<span class="text-slate-900 font-medium">99.93%</span>
+</div>
+<div class="mt-2 h-1.5 rounded-full bg-slate-100">
+<div class="h-1.5 rounded-full bg-emerald-500" style="width:99%"></div>
+</div>
+<p class="mt-2 text-[11px] text-slate-500">目标 ≥ 99.9%，按月度统计</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<div class="flex items-center justify-between text-[12px]">
+<span class="text-slate-600">查询响应时间</span>
+<span class="text-slate-900 font-medium">1.4 s</span>
+</div>
+<div class="mt-2 h-1.5 rounded-full bg-slate-100">
+<div class="h-1.5 rounded-full bg-cyan-600" style="width:70%"></div>
+</div>
+<p class="mt-2 text-[11px] text-slate-500">目标 ≤ 2 秒，百万级流水查询</p>
+</div>
+<div class="rounded-lg border border-slate-200 p-4">
+<div class="flex items-center justify-between text-[12px]">
+<span class="text-slate-600">功能实现率</span>
+<span class="text-slate-900 font-medium">100%</span>
+</div>
+<div class="mt-2 h-1.5 rounded-full bg-slate-100">
+<div class="h-1.5 rounded-full bg-emerald-500" style="width:100%"></div>
+</div>
+<p class="mt-2 text-[11px] text-slate-500">对照需求规格逐项验收</p>
+</div>
+</div>
+</section>
+<!-- 最近识别流水 -->
+<section class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+<div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+<div>
+<h2 class="text-[14px] font-semibold text-slate-900">最近识别与计次流水</h2>
+<p class="text-[11px] text-slate-500">演示数据，仅用于原型展示</p>
+</div>
+<a class="text-[12px] text-cyan-700 hover:underline" href="recognition.html">全部识别记录</a>
+</div>
+<div class="overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<table class="w-full text-[13px]">
+<thead class="bg-slate-50 text-slate-500">
+<tr>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">识别时间</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">车牌号</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">车型</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">点位</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">置信度</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">本次计次</th>
+<th class="text-left font-normal px-5 py-2.5 whitespace-nowrap">状态</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:38:12</td>
+<td class="px-5 py-3 font-medium text-slate-800 whitespace-nowrap">豫 C·8F23 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">自卸货车 40t</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">1 号卸矿平台</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">98.7%</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">第 12 车</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">计次成功</span></td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:36:47</td>
+<td class="px-5 py-3 font-medium text-slate-800 whitespace-nowrap">豫 C·P771 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">自卸货车 40t</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2 号计量点</td>
+<td class="px-5 py-3 text-amber-600 whitespace-nowrap">82.4%</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">第 9 车</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">待人工复核</span></td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:34:05</td>
+<td class="px-5 py-3 font-medium text-slate-800 whitespace-nowrap">豫 C·A309 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">自卸货车 35t</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">1 号卸矿平台</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">99.1%</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">第 7 车</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">计次成功</span></td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:31:52</td>
+<td class="px-5 py-3 font-medium text-slate-800 whitespace-nowrap">豫 C·K118 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">自卸货车 45t</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">3 号排土点</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">96.3%</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">第 5 车</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">计次成功</span></td>
+</tr>
+<tr class="hover:bg-slate-50/70">
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">16:29:30</td>
+<td class="px-5 py-3 font-medium text-slate-800 whitespace-nowrap">豫 C·M602 挂</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">自卸货车 40t</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">2 号计量点</td>
+<td class="px-5 py-3 text-rose-500 whitespace-nowrap">61.8%</td>
+<td class="px-5 py-3 text-slate-600 whitespace-nowrap">待补录</td>
+<td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200">识别失败</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<p class="text-[11px] text-slate-400 pb-2">
+        系统名称：矿井货车倒矿智能管控系统 · 招标人：华盛矿业（集团）有限公司 · 招标编号 HXKY-ZB-2026-0325 · 本页全部数值为演示数据
+      </p>
+</main>
+</div>
+</div>
+<script>
+  // 时间范围切换（仅演示交互）
+  var rangeButtons = document.querySelectorAll('.range-btn');
+  for (var i = 0; i < rangeButtons.length; i++) {
+    rangeButtons[i].addEventListener('click', function () {
+      for (var j = 0; j < rangeButtons.length; j++) {
+        rangeButtons[j].className = 'range-btn rounded-md px-3 py-1.5 text-[12px] text-slate-600 hover:bg-slate-50';
+      }
+      this.className = 'range-btn rounded-md px-3 py-1.5 text-[12px] bg-slate-900 text-white';
+    });
+  }
+
+  var seriesMap = {
+    today: {
+      hours: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+      trips: [22, 31, 38, 41, 26, 30, 44, 52, 58],
+      scans: [24, 34, 40, 43, 28, 33, 47, 55, 61]
+    },
+    week: {
+      hours: ['10-09', '10-10', '10-11', '10-12', '10-13', '10-14', '10-15'],
+      trips: [342, 356, 318, 371, 364, 370, 386],
+      scans: [352, 366, 329, 381, 375, 380, 396]
+    },
+    month: {
+      hours: ['第1周', '第2周', '第3周', '第4周'],
+      trips: [2310, 2456, 2388, 2104],
+      scans: [2378, 2520, 2441, 2160]
+    }
+  };
+
+  var trendChart = echarts.init(document.getElementById('trendChart'));
+  function renderTrend(key) {
+    var d = seriesMap[key];
+    trendChart.setOption({
+      grid: { left: 44, right: 16, top: 40, bottom: 30 },
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['倒矿车次', '识别次数'], right: 0, top: 0, itemWidth: 12, itemHeight: 8, textStyle: { color: '#64748b', fontSize: 11 } },
+      xAxis: {
+        type: 'category',
+        data: d.hours,
+        axisLine: { lineStyle: { color: '#e2e8f0' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#94a3b8', fontSize: 11 }
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: { lineStyle: { color: '#f1f5f9' } },
+        axisLabel: { color: '#94a3b8', fontSize: 11 }
+      },
+      series: [
+        { name: '倒矿车次', type: 'bar', data: d.trips, barWidth: 14, itemStyle: { color: '#0e7490', borderRadius: [4, 4, 0, 0] } },
+        { name: '识别次数', type: 'line', data: d.scans, smooth: true, symbolSize: 6, lineStyle: { width: 2, color: '#f59e0b' }, itemStyle: { color: '#f59e0b' } }
+      ]
+    });
+  }
+  renderTrend('today');
+
+  var rangeMap = { today: 'today', week: 'week', month: 'month' };
+  for (var k = 0; k < rangeButtons.length; k++) {
+    rangeButtons[k].addEventListener('click', function () {
+      renderTrend(rangeMap[this.getAttribute('data-range')]);
+    });
+  }
+
+  var siteChart = echarts.init(document.getElementById('siteChart'));
+  siteChart.setOption({
+    grid: { left: 88, right: 30, top: 10, bottom: 20 },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    xAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5f9' } }, axisLabel: { color: '#94a3b8', fontSize: 11 } },
+    yAxis: {
+      type: 'category',
+      inverse: true,
+      data: ['3 号排土点', '2 号计量点', '1 号卸矿平台', '北侧装车点'],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: '#64748b', fontSize: 11 }
+    },
+    series: [{
+      type: 'bar',
+      data: [74, 92, 138, 82],
+      barWidth: 14,
+      itemStyle: { color: '#0891b2', borderRadius: [0, 4, 4, 0] },
+      label: { show: true, position: 'right', color: '#64748b', fontSize: 11 }
+    }]
+  });
+
+  window.addEventListener('resize', function () {
+    trendChart.resize();
+    siteChart.resize();
+  });
+</script>
+</body>
+</html>
