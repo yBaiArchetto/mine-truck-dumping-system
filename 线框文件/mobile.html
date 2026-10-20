@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[线框] 移动端 H5 演示 · 矿井货车倒矿智能管控系统</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f7f7f7; color: #333; font-size: 13px; }
+  .layout { display: flex; width: 100%; height: 100%; }
+  .sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #ccc; display: flex; flex-direction: column; }
+  .brand { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #e5e5e5; }
+  .brand-mark { width: 28px; height: 28px; border: 1px solid #999; display: grid; place-items: center; color: #999; font-size: 12px; }
+  .brand-title { font-size: 13px; font-weight: 600; }
+  .brand-sub { font-size: 11px; color: #999; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+  .nav-group { font-size: 11px; color: #999; padding: 10px 10px 4px; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 4px; color: #444; text-decoration: none; font-size: 13px; border: 1px solid transparent; }
+  .nav-item:hover { background: #f0f0f0; }
+  .nav-item.active { border-color: #333; background: #f0f0f0; font-weight: 600; }
+  .nav-icon { width: 14px; height: 14px; border: 1px solid #bbb; }
+  .sidebar-foot { padding: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; line-height: 1.6; }
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { height: 56px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .page-title { font-size: 14px; font-weight: 600; }
+  .page-desc { font-size: 11px; color: #999; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tag { border: 1px solid #ccc; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  .user { display: flex; align-items: center; gap: 8px; padding-left: 12px; border-left: 1px solid #e5e5e5; }
+  .avatar { width: 26px; height: 26px; border: 1px solid #999; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #666; }
+  .content { flex: 1; overflow-y: auto; padding: 20px; }
+  .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+  .col-3 { grid-column: span 3; }
+  .col-5 { grid-column: span 5; }
+  .col-4 { grid-column: span 4; }
+  .panel { background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+  .panel-pad { padding: 16px; }
+  .panel-title { font-size: 13px; font-weight: 600; }
+  .panel-sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .muted { color: #999; font-size: 11px; }
+  .stack > * + * { margin-top: 16px; }
+  .list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .list li { display: flex; gap: 8px; font-size: 12px; color: #555; line-height: 1.6; }
+  .list .mark { flex-shrink: 0; width: 12px; height: 12px; border: 1px solid #999; margin-top: 3px; }
+  .plain-list { list-style: none; margin: 12px 0 0; padding: 0; font-size: 12px; color: #555; line-height: 1.9; }
+  .jump-btn { display: block; width: 100%; text-align: left; border: 1px solid #ccc; background: #fff; border-radius: 4px; padding: 8px 12px; font-size: 12px; color: #444; cursor: pointer; }
+  .jump-btn + .jump-btn { margin-top: 8px; }
+  .jump-btn:hover { background: #fafafa; }
+  /* 手机外框 */
+  .phone-wrap { display: flex; justify-content: center; }
+  .phone-frame { width: 380px; max-width: 100%; background: #fff; border: 2px solid #999; border-radius: 32px; padding: 8px; }
+  .phone-screen { height: 740px; max-height: calc(100vh - 180px); border: 1px solid #ccc; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; background: #fff; position: relative; }
+  .statusbar { height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 10px; color: #777; border-bottom: 1px solid #eee; }
+  .app-head { flex-shrink: 0; padding: 10px 14px 12px; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: flex-start; }
+  .app-title { font-size: 14px; font-weight: 600; }
+  .app-sub { font-size: 10px; color: #999; margin-top: 2px; }
+  .app-icons { display: flex; gap: 8px; align-items: center; }
+  .app-icon { width: 28px; height: 28px; border: 1px solid #ccc; border-radius: 50%; display: grid; place-items: center; font-size: 10px; color: #777; position: relative; }
+  .app-icon .mini { position: absolute; top: -4px; right: -4px; background: #fff; border: 1px solid #999; border-radius: 8px; font-size: 9px; padding: 0 4px; }
+  .screens { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+  .screen { position: absolute; inset: 0; overflow-y: auto; padding: 14px; display: none; }
+  .screen.active { display: block; }
+  .card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin-bottom: 12px; background: #fff; }
+  .card.dark { background: #f0f0f0; border-color: #ccc; }
+  .card.warn { border-style: dashed; }
+  .card-title { font-size: 12px; font-weight: 600; }
+  .big-num { font-size: 26px; font-weight: 600; line-height: 1; margin-top: 4px; }
+  .big-num small { font-size: 12px; color: #999; font-weight: normal; }
+  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quick { border: 1px solid #ddd; border-radius: 6px; padding: 10px; text-align: left; background: #fff; cursor: pointer; }
+  .quick:hover { background: #fafafa; }
+  .quick .q-icon { width: 20px; height: 20px; border: 1px solid #bbb; }
+  .quick .q-title { font-size: 12px; margin-top: 6px; color: #333; }
+  .quick .q-sub { font-size: 10px; color: #999; margin-top: 2px; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+  .row:last-child { border-bottom: 0; }
+  .badge { font-size: 10px; border: 1px solid #bbb; border-radius: 8px; padding: 1px 6px; color: #666; white-space: nowrap; }
+  .badge.urgent { border: 2px solid #555; color: #333; font-weight: 600; }
+  .badge.minor { border-style: dashed; }
+  .mini-btn { display: block; width: 100%; border: 1px solid #999; background: #fff; border-radius: 6px; padding: 7px; font-size: 12px; color: #333; cursor: pointer; margin-top: 8px; }
+  .mini-btn.solid { background: #333; color: #fff; border-color: #333; }
+  .mini-btn:hover { background: #f0f0f0; }
+  .mini-btn.solid:hover { background: #222; }
+  .stat-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-3 .card { text-align: center; margin-bottom: 0; }
+  .stat-3 .n { font-size: 18px; font-weight: 600; }
+  .stat-3 .s { font-size: 10px; color: #999; margin-top: 2px; }
+  .tabbar { flex-shrink: 0; border-top: 1px solid #ccc; display: grid; grid-template-columns: repeat(3, 1fr); background: #fff; }
+  .tabbar button { border: 0; background: #fff; padding: 8px 0; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; color: #999; font-size: 10px; }
+  .tabbar button .ti { width: 18px; height: 18px; border: 1px solid #ccc; }
+  .tabbar button.active { color: #333; font-weight: 600; }
+  .tabbar button.active .ti { border-color: #333; }
+  .phone-toast { display: none; position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 5;
+                 background: #333; color: #fff; font-size: 11px; padding: 8px 14px; border-radius: 12px; white-space: nowrap; }
+  .phone-toast.show { display: block; }
+  .list-rows { list-style: none; margin: 0; padding: 0; }
+  .list-rows li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+  .list-rows li:last-child { border-bottom: 0; }
+  .list-rows .t { color: #333; }
+  .list-rows .s { color: #999; font-size: 10px; margin-top: 2px; }
+  .footnote { font-size: 11px; color: #aaa; margin-top: 16px; }
+  @media (max-width: 1280px) { .col-3, .col-4, .col-5 { grid-column: span 12; } }
+  @media (max-width: 900px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">▢</div><div><div class="brand-title">矿井货车倒矿</div><div class="brand-sub">智能管控系统</div></div></div>
+    <nav class="nav">
+      <div class="nav-group">概览</div>
+      <a class="nav-item" href="home.html"><span class="nav-icon"></span>工作台</a>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon"></span>可视化看板</a>
+      <div class="nav-group">业务管控</div>
+      <a class="nav-item" href="recognition.html"><span class="nav-icon"></span>车牌识别计次</a>
+      <a class="nav-item" href="vehicles.html"><span class="nav-icon"></span>车辆定位管控</a>
+      <a class="nav-item" href="alarms.html"><span class="nav-icon"></span>告警与复核</a>
+      <a class="nav-item" href="statistics.html"><span class="nav-icon"></span>统计与报表</a>
+      <div class="nav-group">终端与项目</div>
+      <a class="nav-item active" href="mobile.html"><span class="nav-icon"></span>移动端 H5</a>
+      <a class="nav-item" href="project.html"><span class="nav-icon"></span>项目实施与验收</a>
+    </nav>
+    <div class="sidebar-foot">内网部署 · 演示数据<br/>需求基线草案 V0.9</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="page-title">移动端 H5 现场作业</div><div class="page-desc">面向调度员、司磅员、安全监管人员的轻量现场操作演示</div></div>
+      <div class="topbar-right">
+        <span class="tag">演示数据</span>
+        <div class="user"><div class="avatar">员</div><div><div style="font-size:12px;font-weight:600;">司磅员 · 张师傅</div><div class="muted">2 号计量点</div></div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="grid-12">
+        <!-- 左：说明 -->
+        <section class="col-3 stack">
+          <div class="panel panel-pad">
+            <div class="panel-title">使用场景</div>
+            <ul class="list">
+              <li><span class="mark"></span><span><b>司磅员</b>：计量点核对识别结果、手动补录、生成计次。</span></li>
+              <li><span class="mark"></span><span><b>调度员</b>：查看当班作业进度、点位排队与车辆在途情况。</span></li>
+              <li><span class="mark"></span><span><b>安全监管人员</b>：接收告警推送并现场复核，上传处置说明。</span></li>
+            </ul>
+          </div>
+          <div class="panel panel-pad">
+            <div class="panel-title">技术说明</div>
+            <ul class="plain-list">
+              <li>· 移动端形态为 H5，与服务端 Web 管理端共用同一套业务接口。</li>
+              <li>· 仅在内网环境访问，登录沿用系统统一账号与角色权限。</li>
+              <li>· 弱网环境支持本地缓存补录，恢复联网后自动同步。</li>
+              <li>· 告警推送与复核结果实时回写服务端，纳入审计日志。</li>
+            </ul>
+          </div>
+          <div class="panel panel-pad">
+            <div class="panel-title">演示导航</div>
+            <div class="panel-sub">点击下方按钮或手机底部标签切换页面</div>
+            <div style="margin-top:12px;">
+              <button class="jump-btn" data-jump="job">作业首页 · 今日任务与快捷操作</button>
+              <button class="jump-btn" data-jump="alarm">告警复核 · 待复核告警与处置</button>
+              <button class="jump-btn" data-jump="me">我的 · 账号、班次与设置</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 中：手机 -->
+        <section class="col-5 phone-wrap">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="statusbar"><span>16:42</span><span>▢ ▢ ▢</span></div>
+              <div class="app-head">
+                <div>
+                  <div class="app-title">倒矿作业</div>
+                  <div class="app-sub">2 号计量点 · 白班 08:00-16:00</div>
+                </div>
+                <div class="app-icons">
+                  <span class="app-icon">▢<span class="mini">3</span></span>
+                  <span class="app-icon" style="border-radius:50%;font-size:10px;">张</span>
+                </div>
+              </div>
+
+              <div class="screens">
+                <!-- 作业首页 -->
+                <div class="screen active" id="screen-job">
+                  <div class="card dark">
+                    <div class="muted">今日我的计次</div>
+                    <div class="big-num">12<small> 车</small></div>
+                    <div style="display:flex;gap:12px;margin-top:10px;font-size:10px;color:#666;">
+                      <span>待补录 1 条</span><span>识别复核 2 条</span><span>在点车辆 6 台</span>
+                    </div>
+                  </div>
+                  <div class="quick-grid">
+                    <button class="quick quick-btn"><div class="q-icon"></div><div class="q-title">扫码识别</div><div class="q-sub">调用相机识牌</div></button>
+                    <button class="quick quick-btn"><div class="q-icon"></div><div class="q-title">手动补录</div><div class="q-sub">识别失败补录</div></button>
+                    <button class="quick quick-btn"><div class="q-icon"></div><div class="q-title">拍照取证</div><div class="q-sub">上传现场照片</div></button>
+                    <button class="quick quick-btn"><div class="q-icon"></div><div class="q-title">点位上报</div><div class="q-sub">异常情况上报</div></button>
+                  </div>
+                  <div class="card warn">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <div class="card-title">待补录记录</div><span class="muted">1 条</span>
+                    </div>
+                    <div class="muted" style="margin-top:6px;">豫 C·M602 挂 · 16:29 · 置信度 61.8%</div>
+                    <button class="mini-btn solid supply-btn">立即补录</button>
+                  </div>
+                  <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <div class="card-title">今日流水</div><span class="muted">最近 5 条</span>
+                    </div>
+                    <ul class="list-rows" style="margin-top:8px;">
+                      <li><div><div class="t">豫 C·8F23 挂</div><div class="s">16:38 · 第 12 车</div></div><span class="muted">已计次</span></li>
+                      <li><div><div class="t">豫 C·A309 挂</div><div class="s">16:34 · 第 7 车</div></div><span class="muted">已计次</span></li>
+                      <li><div><div class="t">豫 C·K118 挂</div><div class="s">16:31 · 第 5 车</div></div><span class="muted">已计次</span></li>
+                      <li><div><div class="t">豫 C·H204 挂</div><div class="s">16:26 · 第 11 车</div></div><span class="muted">已计次</span></li>
+                      <li><div><div class="t">豫 C·T556 挂</div><div class="s">16:22 · 第 6 车</div></div><span class="badge">待复核</span></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- 告警复核 -->
+                <div class="screen" id="screen-alarm">
+                  <div class="stat-3">
+                    <div class="card"><div class="n">3</div><div class="s">待复核</div></div>
+                    <div class="card"><div class="n">9</div><div class="s">今日已处理</div></div>
+                    <div class="card"><div class="n">14s</div><div class="s">平均复核</div></div>
+                  </div>
+                  <div class="card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <div class="card-title">待复核告警</div><span class="muted">3 条</span>
+                    </div>
+                    <div style="margin-top:8px;">
+                      <div class="row" style="align-items:flex-start;">
+                        <div><div class="t" style="font-size:12px;font-weight:600;">车辆滞留超时</div><div class="s">1 号卸矿平台 · 16:21 · 豫 C·8F23 挂</div></div>
+                        <span class="badge urgent">紧急</span>
+                      </div>
+                      <button class="mini-btn solid review-btn">复核处置</button>
+                      <div class="row" style="align-items:flex-start;margin-top:8px;">
+                        <div><div class="t" style="font-size:12px;font-weight:600;">识别置信度偏低</div><div class="s">2 号计量点 · 15:47 · 豫 C·P771 挂</div></div>
+                        <span class="badge">重要</span>
+                      </div>
+                      <button class="mini-btn solid review-btn">复核处置</button>
+                      <div class="row" style="align-items:flex-start;margin-top:8px;">
+                        <div><div class="t" style="font-size:12px;font-weight:600;">点位外停留</div><div class="s">北侧电子围栏 · 15:12 · 豫 C·A309 挂</div></div>
+                        <span class="badge minor">一般</span>
+                      </div>
+                      <button class="mini-btn solid review-btn">复核处置</button>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-title">今日已处理</div>
+                    <ul class="list-rows" style="margin-top:8px;">
+                      <li><div><div class="t">定位偏差超限</div><div class="s">14:58 · 3 号排土点</div></div><span class="muted">误报</span></li>
+                      <li><div><div class="t">识别置信度偏低</div><div class="s">14:31 · 北侧装车点</div></div><span class="muted">真实告警</span></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- 我的 -->
+                <div class="screen" id="screen-me">
+                  <div class="card" style="display:flex;gap:12px;align-items:center;">
+                    <div class="avatar" style="width:44px;height:44px;font-size:14px;">张</div>
+                    <div>
+                      <div style="font-size:13px;font-weight:600;">张师傅</div>
+                      <div class="muted">司磅员 · 工号 D-0231 · 2 号计量点</div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="muted">当前班次</div>
+                    <div style="font-size:13px;font-weight:600;margin-top:2px;">白班 08:00 - 16:00</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+                      <div style="flex:1;height:6px;background:#eee;border-radius:3px;"><div style="height:6px;width:96%;background:#999;border-radius:3px;"></div></div>
+                      <span class="muted">剩余 18 分钟</span>
+                    </div>
+                  </div>
+                  <div class="card" style="padding:0;">
+                    <ul class="list-rows" style="margin:0;padding:4px 12px;">
+                      <li><span class="t">消息推送设置</span><span class="muted">›</span></li>
+                      <li><span class="t">离线缓存记录</span><span class="muted">1 条待同步</span></li>
+                      <li><span class="t">操作手册与培训</span><span class="muted">›</span></li>
+                      <li><span class="t">版本信息</span><span class="muted">H5 v1.0.0（演示）</span></li>
+                    </ul>
+                  </div>
+                  <button class="mini-btn" style="width:100%;">退出登录</button>
+                  <p class="muted" style="text-align:center;margin-top:12px;">华盛矿业（集团）有限公司 · 内网访问</p>
+                </div>
+              </div>
+
+              <div class="tabbar">
+                <button class="tab-btn active" data-screen="job"><span class="ti"></span>作业</button>
+                <button class="tab-btn" data-screen="alarm"><span class="ti"></span>告警</button>
+                <button class="tab-btn" data-screen="me"><span class="ti"></span>我的</button>
+              </div>
+              <div class="phone-toast" id="phoneToast"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 右：说明 -->
+        <section class="col-4 stack">
+          <div class="panel panel-pad">
+            <div class="panel-title">页面清单</div>
+            <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+              <div class="card" style="margin:0;"><div class="card-title">作业首页</div><div class="muted" style="margin-top:4px;">今日计次概览、扫码识别 / 手动补录 / 拍照取证 / 点位上报四项快捷操作、待补录提醒与今日流水。</div></div>
+              <div class="card" style="margin:0;"><div class="card-title">告警复核</div><div class="muted" style="margin-top:4px;">展示待复核告警与处置入口，可按级别查看，复核结论回写服务端。</div></div>
+              <div class="card" style="margin:0;"><div class="card-title">我的</div><div class="muted" style="margin-top:4px;">账号与班次信息、消息推送、离线缓存、操作手册与版本信息。</div></div>
+            </div>
+          </div>
+          <div class="panel panel-pad">
+            <div class="panel-title">与服务端的协同</div>
+            <ul class="list">
+              <li><span class="mark"></span>识别与计次结果由服务端统一生成，移动端仅做核对与补录。</li>
+              <li><span class="mark"></span>所有操作留痕，可追溯到人、时间与设备。</li>
+              <li><span class="mark"></span>作业数据实时汇入可视化看板与统计报表。</li>
+            </ul>
+            <div style="display:flex;gap:10px;margin-top:14px;">
+              <a class="jump-btn" href="home.html" style="text-align:center;">返回工作台</a>
+              <a class="jump-btn" href="alarms.html" style="text-align:center;background:#333;color:#fff;border-color:#333;">服务端复核</a>
+            </div>
+          </div>
+          <div class="panel panel-pad" style="border-style:dashed;">
+            <div class="panel-title">培训覆盖角色</div>
+            <p class="muted" style="line-height:1.7;margin:8px 0 0;">按合同要求，项目提供 3 场次、累计不少于 12 课时的培训，对象包含调度员、司磅员、系统管理员与安全监管人员，采用现场授课与实操演练结合方式。</p>
+            <a href="project.html" class="muted" style="display:inline-block;margin-top:10px;text-decoration:underline;">查看培训与运维条款 →</a>
+          </div>
+        </section>
+      </div>
+      <p class="footnote">移动端界面为原型演示，数据为模拟数据。</p>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var screens = {
+      job: document.getElementById('screen-job'),
+      alarm: document.getElementById('screen-alarm'),
+      me: document.getElementById('screen-me')
+    };
+    var tabs = document.querySelectorAll('.tab-btn');
+    var phoneToast = document.getElementById('phoneToast');
+    var toastTimer = null;
+
+    function showPhoneToast(msg) {
+      phoneToast.textContent = msg;
+      phoneToast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { phoneToast.classList.remove('show'); }, 1800);
+    }
+
+    function switchScreen(key) {
+      Object.keys(screens).forEach(function (name) {
+        screens[name].classList.toggle('active', name === key);
+      });
+      tabs.forEach(function (tab) {
+        tab.classList.toggle('active', tab.getAttribute('data-screen') === key);
+      });
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        switchScreen(this.getAttribute('data-screen'));
+      });
+    });
+
+    document.querySelectorAll('.jump-btn[data-jump]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        switchScreen(this.getAttribute('data-jump'));
+      });
+    });
+
+    document.querySelectorAll('.quick-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var label = this.querySelector('.q-title').textContent;
+        showPhoneToast(label + '：功能演示入口');
+      });
+    });
+
+    var supplyBtn = document.querySelector('.supply-btn');
+    if (supplyBtn) {
+      supplyBtn.addEventListener('click', function () {
+        showPhoneToast('补录提交成功，已生成计次记录（演示）');
+      });
+    }
+
+    document.querySelectorAll('.review-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        showPhoneToast('复核结论已提交（演示）');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

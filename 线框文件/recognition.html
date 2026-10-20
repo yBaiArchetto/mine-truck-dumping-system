@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[线框] 车牌识别与自动计次 · 矿井货车倒矿智能管控系统</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: #f7f7f7; color: #333; font-size: 13px; }
+  .layout { display: flex; width: 100%; height: 100%; }
+  .sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #ccc; display: flex; flex-direction: column; }
+  .brand { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #e5e5e5; }
+  .brand-mark { width: 28px; height: 28px; border: 1px solid #999; display: grid; place-items: center; color: #999; font-size: 12px; }
+  .brand-title { font-size: 13px; font-weight: 600; }
+  .brand-sub { font-size: 11px; color: #999; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+  .nav-group { font-size: 11px; color: #999; padding: 10px 10px 4px; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 4px; color: #444; text-decoration: none; font-size: 13px; border: 1px solid transparent; }
+  .nav-item:hover { background: #f0f0f0; }
+  .nav-item.active { border-color: #333; background: #f0f0f0; font-weight: 600; }
+  .nav-icon { width: 14px; height: 14px; border: 1px solid #bbb; }
+  .sidebar-foot { padding: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; line-height: 1.6; }
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { height: 56px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .page-title { font-size: 14px; font-weight: 600; }
+  .page-desc { font-size: 11px; color: #999; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tag { border: 1px solid #ccc; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  .user { display: flex; align-items: center; gap: 8px; padding-left: 12px; border-left: 1px solid #e5e5e5; }
+  .avatar { width: 26px; height: 26px; border: 1px solid #999; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #666; }
+  .content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+  .panel-pad { padding: 16px; }
+  .panel-title { font-size: 13px; font-weight: 600; }
+  .panel-sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .muted { color: #999; font-size: 11px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .kpi { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 12px 14px; }
+  .kpi-label { font-size: 11px; color: #777; }
+  .kpi-value { font-size: 22px; font-weight: 600; margin-top: 6px; line-height: 1; }
+  .kpi-value small { font-size: 11px; color: #999; font-weight: normal; }
+  .filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; align-items: end; }
+  .field label { display: block; font-size: 11px; color: #777; margin-bottom: 4px; }
+  .field input, .field select { width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 7px 10px; font-size: 12px; background: #fff; color: #333; }
+  .field input:focus, .field select:focus { outline: 1px solid #999; }
+  .btn { border: 1px solid #999; background: #fff; border-radius: 4px; padding: 7px 14px; font-size: 12px; color: #333; cursor: pointer; }
+  .btn:hover { background: #f0f0f0; }
+  .btn.solid { background: #333; color: #fff; border-color: #333; }
+  .btn.solid:hover { background: #222; }
+  .btn-group { display: flex; gap: 8px; }
+  .btn-group .btn { flex: 1; }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; font-weight: normal; color: #777; background: #f4f4f4; padding: 8px 14px; white-space: nowrap; border-bottom: 1px solid #ccc; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #eee; white-space: nowrap; color: #444; }
+  tbody tr:hover { background: #fafafa; }
+  .badge { font-size: 11px; border: 1px solid #bbb; border-radius: 10px; padding: 1px 8px; color: #666; white-space: nowrap; }
+  .badge.urgent { border: 2px solid #555; color: #333; font-weight: 600; }
+  .badge.minor { border-style: dashed; }
+  .link { color: #555; text-decoration: underline; cursor: pointer; background: none; border: 0; padding: 0; font-size: 12px; }
+  .chart-ph { border: 1px dashed #bbb; border-radius: 4px; background: #fafafa; display: grid; place-items: center; color: #aaa; font-size: 12px; text-align: center; padding: 10px; }
+  .rule-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .rule-list li { display: flex; gap: 8px; font-size: 12px; color: #555; line-height: 1.6; }
+  .rule-list .mark { flex-shrink: 0; width: 12px; height: 12px; border: 1px solid #999; margin-top: 3px; }
+  .status-list { list-style: none; margin: 12px 0 0; padding: 0; font-size: 12px; }
+  .status-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+  .status-list li:last-child { border-bottom: 0; }
+  .footnote { font-size: 11px; color: #aaa; padding-bottom: 4px; }
+  /* 弹窗 */
+  .modal-mask { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,0.35); padding: 20px; align-items: center; justify-content: center; }
+  .modal-mask.show { display: flex; }
+  .modal { width: 100%; max-width: 760px; background: #fff; border: 1px solid #999; border-radius: 4px; overflow: hidden; }
+  .modal-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; border-bottom: 1px solid #e5e5e5; }
+  .modal-body { padding: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 18px; background: #f7f7f7; border-top: 1px solid #e5e5e5; }
+  .capture-ph { position: relative; height: 200px; border: 1px solid #ccc; border-radius: 4px; background: #fafafa;
+                background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%),
+                linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%);
+                background-size: 24px 24px; background-position: 0 0, 12px 12px; }
+  .capture-ph .label { position: absolute; top: 8px; left: 8px; background: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 2px 8px; font-size: 11px; color: #666; }
+  .capture-ph .plate { position: absolute; bottom: 10px; left: 10px; background: #fff; border: 1px solid #999; padding: 3px 8px; font-size: 12px; color: #333; }
+  .kv { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+  .kv-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 7px; }
+  .kv-row span:first-child { color: #777; }
+  .toast { display: none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 60;
+           background: #333; color: #fff; padding: 10px 18px; border-radius: 4px; font-size: 12px; }
+  .toast.show { display: block; }
+  @media (max-width: 1280px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .filter-grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .modal-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) { .sidebar { display: none; } .kpi-grid, .filter-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">▢</div><div><div class="brand-title">矿井货车倒矿</div><div class="brand-sub">智能管控系统</div></div></div>
+    <nav class="nav">
+      <div class="nav-group">概览</div>
+      <a class="nav-item" href="home.html"><span class="nav-icon"></span>工作台</a>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon"></span>可视化看板</a>
+      <div class="nav-group">业务管控</div>
+      <a class="nav-item active" href="recognition.html"><span class="nav-icon"></span>车牌识别计次</a>
+      <a class="nav-item" href="vehicles.html"><span class="nav-icon"></span>车辆定位管控</a>
+      <a class="nav-item" href="alarms.html"><span class="nav-icon"></span>告警与复核</a>
+      <a class="nav-item" href="statistics.html"><span class="nav-icon"></span>统计与报表</a>
+      <div class="nav-group">终端与项目</div>
+      <a class="nav-item" href="mobile.html"><span class="nav-icon"></span>移动端 H5</a>
+      <a class="nav-item" href="project.html"><span class="nav-icon"></span>项目实施与验收</a>
+    </nav>
+    <div class="sidebar-foot">内网部署 · 演示数据<br/>需求基线草案 V0.9</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="page-title">车牌识别与自动计次</div><div class="page-desc">识别记录查询、计次核对与人工复核</div></div>
+      <div class="topbar-right">
+        <span class="tag">演示数据</span>
+        <div class="user"><div class="avatar">司</div><div><div style="font-size:12px;font-weight:600;">司磅员</div><div class="muted">2 号计量点</div></div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 指标 -->
+      <section class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">今日识别总数</div><div class="kpi-value">396<small> 次</small></div></div>
+        <div class="kpi"><div class="kpi-label">识别成功</div><div class="kpi-value">389</div></div>
+        <div class="kpi"><div class="kpi-label">待人工复核</div><div class="kpi-value">4</div></div>
+        <div class="kpi"><div class="kpi-label">识别失败</div><div class="kpi-value">3</div></div>
+        <div class="kpi"><div class="kpi-label">计次准确率</div><div class="kpi-value">99.6<small>%</small></div></div>
+      </section>
+
+      <!-- 筛选 -->
+      <section class="panel panel-pad">
+        <div class="filter-grid">
+          <div class="field"><label>车牌号</label><input id="plateInput" type="text" placeholder="如：豫 C·8F23 挂"/></div>
+          <div class="field"><label>识别点位</label>
+            <select id="siteSelect">
+              <option value="all">全部点位</option>
+              <option value="1 号卸矿平台">1 号卸矿平台</option>
+              <option value="2 号计量点">2 号计量点</option>
+              <option value="3 号排土点">3 号排土点</option>
+              <option value="北侧装车点">北侧装车点</option>
+            </select>
+          </div>
+          <div class="field"><label>识别状态</label>
+            <select id="statusSelect">
+              <option value="all">全部状态</option>
+              <option value="success">计次成功</option>
+              <option value="review">待人工复核</option>
+              <option value="fail">识别失败</option>
+            </select>
+          </div>
+          <div class="field"><label>时间范围</label>
+            <select><option>今日 00:00 - 现在</option><option>近 7 日</option><option>近 30 日</option><option>自定义时间段</option></select>
+          </div>
+          <div class="btn-group">
+            <button class="btn solid" id="searchBtn">查询</button>
+            <button class="btn" id="resetBtn">重置</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid-3">
+        <!-- 记录表 -->
+        <section class="panel" style="overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #eee;">
+            <div>
+              <div class="panel-title">识别记录</div>
+              <div class="panel-sub">共 <span id="rowCount">8</span> 条记录 · 演示数据</div>
+            </div>
+            <button class="btn" id="exportBtn">导出记录</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>识别时间</th><th>车牌号</th><th>点位</th><th>置信度</th><th>本次计次</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="recordBody">
+                <tr data-plate="豫 C·8F23 挂" data-site="1 号卸矿平台" data-status="success"><td>16:38:12</td><td>豫 C·8F23 挂</td><td>1 号卸矿平台</td><td>98.7%</td><td>第 12 车</td><td><span class="badge">计次成功</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·P771 挂" data-site="2 号计量点" data-status="review"><td>16:36:47</td><td>豫 C·P771 挂</td><td>2 号计量点</td><td>82.4%</td><td>第 9 车</td><td><span class="badge">待人工复核</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·A309 挂" data-site="1 号卸矿平台" data-status="success"><td>16:34:05</td><td>豫 C·A309 挂</td><td>1 号卸矿平台</td><td>99.1%</td><td>第 7 车</td><td><span class="badge">计次成功</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·K118 挂" data-site="3 号排土点" data-status="success"><td>16:31:52</td><td>豫 C·K118 挂</td><td>3 号排土点</td><td>96.3%</td><td>第 5 车</td><td><span class="badge">计次成功</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·M602 挂" data-site="2 号计量点" data-status="fail"><td>16:29:30</td><td>豫 C·M602 挂</td><td>2 号计量点</td><td>61.8%</td><td>待补录</td><td><span class="badge minor">识别失败</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·H204 挂" data-site="北侧装车点" data-status="success"><td>16:26:11</td><td>豫 C·H204 挂</td><td>北侧装车点</td><td>97.5%</td><td>第 11 车</td><td><span class="badge">计次成功</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·T556 挂" data-site="1 号卸矿平台" data-status="review"><td>16:22:38</td><td>豫 C·T556 挂</td><td>1 号卸矿平台</td><td>85.1%</td><td>第 6 车</td><td><span class="badge">待人工复核</span></td><td><button class="link detail-btn">详情</button></td></tr>
+                <tr data-plate="豫 C·B918 挂" data-site="3 号排土点" data-status="success"><td>16:18:04</td><td>豫 C·B918 挂</td><td>3 号排土点</td><td>95.8%</td><td>第 4 车</td><td><span class="badge">计次成功</span></td><td><button class="link detail-btn">详情</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 右侧 -->
+        <section style="display:flex;flex-direction:column;gap:16px;">
+          <div class="panel panel-pad">
+            <div class="panel-title">近 7 日识别准确率</div>
+            <div class="panel-sub">单位：% · 抽样统计</div>
+            <div class="chart-ph" style="height:168px;margin-top:10px;">[ 折线图占位 ]<br/>10-09 ~ 10-15</div>
+          </div>
+          <div class="panel panel-pad">
+            <div class="panel-title">计次规则与阈值</div>
+            <ul class="rule-list">
+              <li><span class="mark"></span>置信度 ≥ 90% 自动计次，无需人工干预。</li>
+              <li><span class="mark"></span>置信度 70%–90% 进入人工复核队列，复核时限 20 秒/条（演示口径）。</li>
+              <li><span class="mark"></span>置信度 &lt; 70% 判定识别失败，由司磅员手动补录并生成异常记录。</li>
+              <li><span class="mark"></span>同一车辆 5 分钟内重复识别自动去重，避免重复计次。</li>
+            </ul>
+          </div>
+          <div class="panel panel-pad">
+            <div class="panel-title">识别通道状态</div>
+            <ul class="status-list">
+              <li><span>1 号卸矿平台相机</span><span>在线 · 25fps</span></li>
+              <li><span>2 号计量点相机</span><span>在线 · 25fps</span></li>
+              <li><span>3 号排土点相机</span><span>在线 · 18fps</span></li>
+              <li><span>北侧装车点相机</span><span>在线 · 25fps</span></li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <p class="footnote">本页记录为原型演示数据，车牌、时间与置信度均为示例，不代表真实生产数据。</p>
+    </main>
+  </div>
+</div>
+
+<!-- 识别详情弹窗 -->
+<div class="modal-mask" id="detailModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="panel-title">识别记录详情</div><div class="panel-sub">记录编号 REC-20261015-163812</div></div>
+      <button class="btn" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="capture-ph">
+        <span class="label">抓拍原图 · 演示</span>
+        <span class="plate">豫 C·8F23 挂 · 置信度 98.7%</span>
+      </div>
+      <div class="kv">
+        <div class="kv-row"><span>识别时间</span><span>2026-10-15 16:38:12</span></div>
+        <div class="kv-row"><span>识别点位</span><span>1 号卸矿平台</span></div>
+        <div class="kv-row"><span>车辆 / 车型</span><span>豫 C·8F23 挂 · 自卸货车 40t</span></div>
+        <div class="kv-row"><span>关联司机</span><span>王师傅（工号 D-0231）</span></div>
+        <div class="kv-row"><span>本次计次</span><span>第 12 车（当日）</span></div>
+        <div class="kv-row"><span>处理方式</span><span>系统自动计次</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="modalCancel">关闭</button>
+      <button class="btn solid" id="modalConfirm">确认识别结果</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  (function () {
+    var recordBody = document.getElementById('recordBody');
+    var rowCount = document.getElementById('rowCount');
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2200);
+    }
+
+    var plateInput = document.getElementById('plateInput');
+    var siteSelect = document.getElementById('siteSelect');
+    var statusSelect = document.getElementById('statusSelect');
+
+    function applyFilter() {
+      var plate = plateInput.value.trim();
+      var site = siteSelect.value;
+      var status = statusSelect.value;
+      var rows = recordBody.querySelectorAll('tr');
+      var visible = 0;
+      rows.forEach(function (row) {
+        var okPlate = plate === '' || row.getAttribute('data-plate').indexOf(plate) > -1;
+        var okSite = site === 'all' || row.getAttribute('data-site') === site;
+        var okStatus = status === 'all' || row.getAttribute('data-status') === status;
+        row.style.display = (okPlate && okSite && okStatus) ? '' : 'none';
+        if (okPlate && okSite && okStatus) visible++;
+      });
+      rowCount.textContent = String(visible);
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', function () {
+      applyFilter(); showToast('已按筛选条件刷新识别记录（演示）');
+    });
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      plateInput.value = ''; siteSelect.value = 'all'; statusSelect.value = 'all';
+      applyFilter(); showToast('筛选条件已重置');
+    });
+    statusSelect.addEventListener('change', applyFilter);
+
+    var detailModal = document.getElementById('detailModal');
+    function openModal() { detailModal.classList.add('show'); }
+    function closeModal() { detailModal.classList.remove('show'); }
+    recordBody.querySelectorAll('.detail-btn').forEach(function (b) { b.addEventListener('click', openModal); });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    document.getElementById('modalConfirm').addEventListener('click', function () {
+      closeModal(); showToast('识别结果已确认，计次记录同步更新（演示）');
+    });
+    detailModal.addEventListener('click', function (e) { if (e.target === detailModal) closeModal(); });
+
+    document.getElementById('exportBtn').addEventListener('click', function () {
+      showToast('演示环境：导出功能仅展示交互，不生成文件');
+    });
+
+    applyFilter();
+  })();
+</script>
+</body>
+</html>

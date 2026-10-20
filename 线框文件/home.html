@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[线框] 工作台总览 · 矿井货车倒矿智能管控系统</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: #f7f7f7; color: #333; font-size: 13px; }
+  .layout { display: flex; width: 100%; height: 100%; }
+  /* 侧边栏 */
+  .sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #ccc; display: flex; flex-direction: column; }
+  .brand { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #e5e5e5; }
+  .brand-mark { width: 28px; height: 28px; border: 1px solid #999; display: grid; place-items: center; color: #999; font-size: 12px; }
+  .brand-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .brand-sub { font-size: 11px; color: #999; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+  .nav-group { font-size: 11px; color: #999; padding: 10px 10px 4px; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 4px; color: #444;
+              text-decoration: none; font-size: 13px; border: 1px solid transparent; }
+  .nav-item:hover { background: #f0f0f0; }
+  .nav-item.active { border-color: #333; background: #f0f0f0; font-weight: 600; }
+  .nav-icon { width: 14px; height: 14px; border: 1px solid #bbb; }
+  .sidebar-foot { padding: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; line-height: 1.6; }
+  /* 主区 */
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; background: #f7f7f7; }
+  .topbar { height: 56px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ccc; display: flex;
+            align-items: center; justify-content: space-between; padding: 0 20px; }
+  .page-title { font-size: 14px; font-weight: 600; }
+  .page-desc { font-size: 11px; color: #999; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tag { border: 1px solid #ccc; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  .user { display: flex; align-items: center; gap: 8px; padding-left: 12px; border-left: 1px solid #e5e5e5; }
+  .avatar { width: 26px; height: 26px; border: 1px solid #999; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #666; }
+  .content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  /* 通用块 */
+  .panel { background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+  .panel-pad { padding: 16px; }
+  .panel-title { font-size: 13px; font-weight: 600; }
+  .panel-sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+  .seg { display: inline-flex; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+  .seg button { border: 0; background: #fff; padding: 6px 14px; font-size: 12px; cursor: pointer; color: #555; border-right: 1px solid #ccc; }
+  .seg button:last-child { border-right: 0; }
+  .seg button.active { background: #e5e5e5; font-weight: 600; color: #222; }
+  .muted { color: #999; font-size: 11px; }
+  /* 指标卡 */
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .kpi { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 12px 14px; }
+  .kpi-label { font-size: 11px; color: #777; display: flex; justify-content: space-between; }
+  .kpi-icon { width: 14px; height: 14px; border: 1px solid #ccc; }
+  .kpi-value { font-size: 22px; font-weight: 600; margin-top: 6px; line-height: 1; }
+  .kpi-value small { font-size: 11px; color: #999; font-weight: normal; }
+  .kpi-note { font-size: 11px; color: #999; margin-top: 6px; }
+  .kpi-note.warn { border-left: 2px solid #999; padding-left: 6px; }
+  /* 两栏 */
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .grid-3b { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  /* 图表占位 */
+  .chart-ph { border: 1px dashed #bbb; border-radius: 4px; background: #fafafa; display: grid;
+              place-items: center; color: #aaa; font-size: 12px; text-align: center; padding: 10px; }
+  /* 列表 */
+  .list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .list-item { border: 1px solid #ddd; border-radius: 4px; padding: 10px; display: flex; justify-content: space-between; gap: 8px; }
+  .list-item .t { font-size: 13px; font-weight: 600; }
+  .list-item .s { font-size: 11px; color: #999; margin-top: 2px; }
+  .badge { font-size: 11px; border: 1px solid #bbb; border-radius: 10px; padding: 1px 8px; color: #666; white-space: nowrap; height: fit-content; }
+  .badge.urgent { border: 2px solid #555; color: #333; font-weight: 600; }
+  .badge.minor { border-style: dashed; }
+  .btn { display: inline-block; border: 1px solid #999; background: #fff; border-radius: 4px; padding: 6px 14px;
+         font-size: 12px; color: #333; cursor: pointer; text-align: center; text-decoration: none; }
+  .btn.block { display: block; width: 100%; }
+  .btn:hover { background: #f0f0f0; }
+  .btn.solid { background: #333; color: #fff; border-color: #333; }
+  .btn.solid:hover { background: #222; }
+  /* 视频占位 */
+  .media-ph { position: relative; height: 196px; border: 1px solid #ccc; border-radius: 4px; overflow: hidden;
+              background: #fafafa; background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%),
+              linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%);
+              background-size: 24px 24px; background-position: 0 0, 12px 12px; }
+  .media-ph .label { position: absolute; top: 10px; left: 10px; background: #fff; border: 1px solid #ccc;
+                     border-radius: 10px; padding: 2px 8px; font-size: 11px; color: #666; }
+  .media-ph .center { position: absolute; inset: 0; display: grid; place-items: center; color: #888; font-size: 12px; }
+  /* 状态列表 */
+  .status-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  .status-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+  .status-list li:last-child { border-bottom: 0; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; border: 1px solid #999; margin-right: 6px; }
+  .dot.ok { background: #bbb; }
+  .dot.warn { background: #fff; }
+  .note-box { background: #fafafa; border: 1px solid #ddd; border-radius: 4px; padding: 10px; font-size: 11px; color: #666; line-height: 1.6; }
+  /* 表格 */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; font-weight: normal; color: #777; background: #f4f4f4; padding: 8px 14px; white-space: nowrap; border-bottom: 1px solid #ccc; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #eee; white-space: nowrap; color: #444; }
+  tbody tr:hover { background: #fafafa; }
+  .bar-track { height: 6px; background: #eee; border-radius: 3px; margin-top: 6px; }
+  .bar-fill { height: 6px; background: #999; border-radius: 3px; }
+  .footnote { font-size: 11px; color: #aaa; padding-bottom: 8px; }
+  @media (max-width: 1280px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-3, .grid-3b { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) { .sidebar { display: none; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- 侧边导航 -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">▢</div>
+      <div>
+        <div class="brand-title">矿井货车倒矿</div>
+        <div class="brand-sub">智能管控系统</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-group">概览</div>
+      <a class="nav-item active" href="home.html"><span class="nav-icon"></span>工作台</a>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon"></span>可视化看板</a>
+      <div class="nav-group">业务管控</div>
+      <a class="nav-item" href="recognition.html"><span class="nav-icon"></span>车牌识别计次</a>
+      <a class="nav-item" href="vehicles.html"><span class="nav-icon"></span>车辆定位管控</a>
+      <a class="nav-item" href="alarms.html"><span class="nav-icon"></span>告警与复核</a>
+      <a class="nav-item" href="statistics.html"><span class="nav-icon"></span>统计与报表</a>
+      <div class="nav-group">终端与项目</div>
+      <a class="nav-item" href="mobile.html"><span class="nav-icon"></span>移动端 H5</a>
+      <a class="nav-item" href="project.html"><span class="nav-icon"></span>项目实施与验收</a>
+    </nav>
+    <div class="sidebar-foot">内网部署 · 演示数据<br/>需求基线草案 V0.9</div>
+  </aside>
+
+  <!-- 主区 -->
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="page-title">工作台总览</div>
+        <div class="page-desc">掌握全矿倒矿作业、识别计次与告警复核运行情况</div>
+      </div>
+      <div class="topbar-right">
+        <span class="tag">演示数据</span>
+        <span class="btn" style="position:relative;padding:6px 10px;">▢ 通知 <span class="badge" style="position:absolute;top:-8px;right:-8px;background:#fff;">3</span></span>
+        <div class="user">
+          <div class="avatar">管</div>
+          <div>
+            <div style="font-size:12px;font-weight:600;">系统管理员</div>
+            <div class="muted">调度中心</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 工具条 -->
+      <div class="toolbar">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="muted">统计周期</span>
+          <div class="seg" id="rangeSeg">
+            <button class="active" data-range="today">今日</button>
+            <button data-range="week">近 7 日</button>
+            <button data-range="month">近 30 日</button>
+          </div>
+        </div>
+        <p class="muted" style="margin:0;">数据更新于 2026-10-15 16:42 · 演示数据</p>
+      </div>
+
+      <!-- 核心指标 -->
+      <section class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">今日倒矿车次<span class="kpi-icon"></span></div><div class="kpi-value">386<small> 车</small></div><div class="kpi-note">环比昨日 +4.2%</div></div>
+        <div class="kpi"><div class="kpi-label">车牌识别准确率<span class="kpi-icon"></span></div><div class="kpi-value">99.2<small>%</small></div><div class="kpi-note">抽样 386 车 · 识别失败 3 车</div></div>
+        <div class="kpi"><div class="kpi-label">自动计次准确率<span class="kpi-icon"></span></div><div class="kpi-value">99.6<small>%</small></div><div class="kpi-note">待人工补录 2 条</div></div>
+        <div class="kpi"><div class="kpi-label">待复核告警<span class="kpi-icon"></span></div><div class="kpi-value">3<small> 条</small></div><div class="kpi-note">今日累计告警 23 条</div></div>
+        <div class="kpi"><div class="kpi-label">在线车辆<span class="kpi-icon"></span></div><div class="kpi-value">42<small>/45</small></div><div class="kpi-note warn">离线 3 台需核查</div></div>
+        <div class="kpi"><div class="kpi-label">平均告警时延<span class="kpi-icon"></span></div><div class="kpi-value">1.8<small>s</small></div><div class="kpi-note">满足考核要求</div></div>
+      </section>
+
+      <!-- 趋势 + 待复核 -->
+      <section class="grid-3">
+        <div class="panel panel-pad">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="panel-title">倒矿作业与识别次数趋势</div>
+              <div class="panel-sub">单位：车次 / 次 · 数据口径为演示抽样</div>
+            </div>
+            <a href="statistics.html" style="font-size:12px;color:#666;">查看统计报表 →</a>
+          </div>
+          <div class="chart-ph" style="height:260px;margin-top:12px;">[ 柱状 + 折线图占位 ]<br/>图例：倒矿车次 / 识别次数</div>
+        </div>
+
+        <div class="panel panel-pad" style="display:flex;flex-direction:column;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="panel-title">待复核告警</div>
+            <span class="badge">3 条待处理</span>
+          </div>
+          <ul class="list">
+            <li class="list-item">
+              <div><div class="t">车辆滞留超时</div><div class="s">1 号卸矿平台 · 豫 C·8F23 挂 · 16:21</div></div>
+              <span class="badge urgent">紧急</span>
+            </li>
+            <li class="list-item">
+              <div><div class="t">识别置信度偏低</div><div class="s">2 号计量点 · 豫 C·P771 挂 · 15:47</div></div>
+              <span class="badge">重要</span>
+            </li>
+            <li class="list-item">
+              <div><div class="t">点位外停留</div><div class="s">北侧电子围栏 · 豫 C·A309 挂 · 15:12</div></div>
+              <span class="badge minor">一般</span>
+            </li>
+          </ul>
+          <a class="btn solid block" href="alarms.html" style="margin-top:auto;">进入告警复核</a>
+        </div>
+      </section>
+
+      <!-- 点位 / 视频 / 运行状态 -->
+      <section class="grid-3b">
+        <div class="panel panel-pad">
+          <div class="panel-title">各点位今日作业量</div>
+          <div class="panel-sub">单位：车次</div>
+          <div class="chart-ph" style="height:196px;margin-top:12px;">[ 横向条形图占位 ]<br/>北侧装车点 / 1 号卸矿平台 / 2 号计量点 / 3 号排土点</div>
+        </div>
+        <div class="panel panel-pad">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="panel-title">现场视频通道</div>
+            <span class="muted"><span class="dot ok"></span>3 路在线</span>
+          </div>
+          <div class="media-ph" style="margin-top:12px;">
+            <span class="label">▢ 1 号卸矿平台</span>
+            <span class="center">[ 视频画面占位 ]</span>
+          </div>
+          <div class="note-box" style="margin-top:8px;">通道状态正常 · AI 识别服务在线，帧率 25fps（演示）</div>
+        </div>
+        <div class="panel panel-pad">
+          <div class="panel-title">系统运行状态</div>
+          <div class="panel-sub">内网部署 · 服务健康巡检</div>
+          <ul class="status-list">
+            <li><span>车牌识别服务</span><span><span class="dot ok"></span>正常</span></li>
+            <li><span>车辆定位接入服务</span><span><span class="dot ok"></span>正常</span></li>
+            <li><span>计次与业务接口</span><span><span class="dot warn"></span>延迟偏高</span></li>
+            <li><span>数据库与备份</span><span><span class="dot ok"></span>正常</span></li>
+          </ul>
+          <div class="note-box" style="margin-top:12px;">7×24 小时服务响应：一般故障 4 小时响应 / 8 小时解决，重大故障 2 小时响应 / 24 小时到场。</div>
+        </div>
+      </section>
+
+      <!-- 性能指标 -->
+      <section class="panel panel-pad">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="panel-title">关键性能与验收指标达标情况</div>
+            <div class="panel-sub">对照《需求规格说明书》逐项核验，功能实现率要求 100%</div>
+          </div>
+          <a href="project.html" style="font-size:12px;color:#666;">查看验收标准 →</a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px;">
+          <div style="border:1px solid #ddd;border-radius:4px;padding:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;"><span>并发接入能力</span><span style="font-weight:600;">186 / 200 路</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:93%;"></div></div>
+            <div class="muted" style="margin-top:6px;">目标 ≥ 200 路，演示值仅供参考</div>
+          </div>
+          <div style="border:1px solid #ddd;border-radius:4px;padding:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;"><span>系统可用率</span><span style="font-weight:600;">99.93%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:99%;"></div></div>
+            <div class="muted" style="margin-top:6px;">目标 ≥ 99.9%，按月度统计</div>
+          </div>
+          <div style="border:1px solid #ddd;border-radius:4px;padding:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;"><span>查询响应时间</span><span style="font-weight:600;">1.4 s</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:70%;"></div></div>
+            <div class="muted" style="margin-top:6px;">目标 ≤ 2 秒，百万级流水查询</div>
+          </div>
+          <div style="border:1px solid #ddd;border-radius:4px;padding:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;"><span>功能实现率</span><span style="font-weight:600;">100%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%;"></div></div>
+            <div class="muted" style="margin-top:6px;">对照需求规格逐项验收</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 最近流水 -->
+      <section class="panel" style="overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #eee;">
+          <div>
+            <div class="panel-title">最近识别与计次流水</div>
+            <div class="panel-sub">演示数据，仅用于原型展示</div>
+          </div>
+          <a href="recognition.html" style="font-size:12px;color:#666;">全部识别记录 →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>识别时间</th><th>车牌号</th><th>车型</th><th>点位</th><th>置信度</th><th>本次计次</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td>16:38:12</td><td>豫 C·8F23 挂</td><td>自卸货车 40t</td><td>1 号卸矿平台</td><td>98.7%</td><td>第 12 车</td><td><span class="badge">计次成功</span></td></tr>
+              <tr><td>16:36:47</td><td>豫 C·P771 挂</td><td>自卸货车 40t</td><td>2 号计量点</td><td>82.4%</td><td>第 9 车</td><td><span class="badge">待人工复核</span></td></tr>
+              <tr><td>16:34:05</td><td>豫 C·A309 挂</td><td>自卸货车 35t</td><td>1 号卸矿平台</td><td>99.1%</td><td>第 7 车</td><td><span class="badge">计次成功</span></td></tr>
+              <tr><td>16:31:52</td><td>豫 C·K118 挂</td><td>自卸货车 45t</td><td>3 号排土点</td><td>96.3%</td><td>第 5 车</td><td><span class="badge">计次成功</span></td></tr>
+              <tr><td>16:29:30</td><td>豫 C·M602 挂</td><td>自卸货车 40t</td><td>2 号计量点</td><td>61.8%</td><td>待补录</td><td><span class="badge minor">识别失败</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="footnote">系统名称：矿井货车倒矿智能管控系统 · 招标人：华盛矿业（集团）有限公司 · 招标编号 HXKY-ZB-2026-0325 · 本页全部数值为演示数据</p>
+    </main>
+  </div>
+</div>
+
+<script>
+  // 周期切换（保留交互；图表占位不变）
+  document.querySelectorAll('#rangeSeg button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('#rangeSeg button').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[线框] 告警管理与人工复核 · 矿井货车倒矿智能管控系统</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         background: #f7f7f7; color: #333; font-size: 13px; }
+  .layout { display: flex; width: 100%; height: 100%; }
+  .sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #ccc; display: flex; flex-direction: column; }
+  .brand { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #e5e5e5; }
+  .brand-mark { width: 28px; height: 28px; border: 1px solid #999; display: grid; place-items: center; color: #999; font-size: 12px; }
+  .brand-title { font-size: 13px; font-weight: 600; }
+  .brand-sub { font-size: 11px; color: #999; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+  .nav-group { font-size: 11px; color: #999; padding: 10px 10px 4px; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 4px; color: #444; text-decoration: none; font-size: 13px; border: 1px solid transparent; }
+  .nav-item:hover { background: #f0f0f0; }
+  .nav-item.active { border-color: #333; background: #f0f0f0; font-weight: 600; }
+  .nav-icon { width: 14px; height: 14px; border: 1px solid #bbb; }
+  .sidebar-foot { padding: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; line-height: 1.6; }
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { height: 56px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .page-title { font-size: 14px; font-weight: 600; }
+  .page-desc { font-size: 11px; color: #999; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tag { border: 1px solid #ccc; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  .user { display: flex; align-items: center; gap: 8px; padding-left: 12px; border-left: 1px solid #e5e5e5; }
+  .avatar { width: 26px; height: 26px; border: 1px solid #999; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #666; }
+  .content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+  .panel-pad { padding: 16px; }
+  .panel-title { font-size: 13px; font-weight: 600; }
+  .panel-sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .muted { color: #999; font-size: 11px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .kpi { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 12px 14px; }
+  .kpi-label { font-size: 11px; color: #777; }
+  .kpi-value { font-size: 22px; font-weight: 600; margin-top: 6px; line-height: 1; }
+  .kpi-value small { font-size: 11px; color: #999; font-weight: normal; }
+  .kpi-note { font-size: 11px; color: #999; margin-top: 6px; }
+  .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; }
+  .field label { display: block; font-size: 11px; color: #777; margin-bottom: 4px; }
+  .field select { width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 7px 10px; font-size: 12px; background: #fff; }
+  .field select:focus { outline: 1px solid #999; }
+  .btn { border: 1px solid #999; background: #fff; border-radius: 4px; padding: 7px 14px; font-size: 12px; color: #333; cursor: pointer; }
+  .btn:hover { background: #f0f0f0; }
+  .btn.solid { background: #333; color: #fff; border-color: #333; }
+  .btn.solid:hover { background: #222; }
+  .btn-group { display: flex; gap: 8px; }
+  .btn-group .btn { flex: 1; }
+  .grid-main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; font-weight: normal; color: #777; background: #f4f4f4; padding: 8px 14px; white-space: nowrap; border-bottom: 1px solid #ccc; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #eee; white-space: nowrap; color: #444; }
+  tbody tr:hover { background: #fafafa; }
+  tbody tr.hidden { display: none; }
+  .badge { font-size: 11px; border: 1px solid #bbb; border-radius: 10px; padding: 1px 8px; color: #666; white-space: nowrap; }
+  .badge.urgent { border: 2px solid #555; color: #333; font-weight: 600; }
+  .badge.minor { border-style: dashed; }
+  .badge.done { border-style: dashed; color: #888; }
+  .link { color: #555; text-decoration: underline; cursor: pointer; background: none; border: 0; padding: 0; font-size: 12px; }
+  .link.muted-link { color: #aaa; }
+  .chart-ph { border: 1px dashed #bbb; border-radius: 4px; background: #fafafa; display: grid; place-items: center; color: #aaa; font-size: 12px; text-align: center; padding: 10px; }
+  .rule-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .rule-list li { display: flex; gap: 8px; font-size: 12px; color: #555; line-height: 1.6; }
+  .rule-list .mark { flex-shrink: 0; width: 12px; height: 12px; border: 1px solid #999; margin-top: 3px; }
+  .footnote { font-size: 11px; color: #aaa; padding-bottom: 4px; }
+  /* 复核弹窗 */
+  .modal-mask { display: none; position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,0.35); padding: 20px; align-items: center; justify-content: center; }
+  .modal-mask.show { display: flex; }
+  .modal { width: 100%; max-width: 520px; background: #fff; border: 1px solid #999; border-radius: 4px; overflow: hidden; }
+  .modal-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; border-bottom: 1px solid #e5e5e5; }
+  .modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 18px; background: #f7f7f7; border-top: 1px solid #e5e5e5; }
+  .m-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 12px; }
+  .m-info { border: 1px solid #ddd; border-radius: 4px; padding: 10px; background: #fafafa; }
+  .m-info .k { color: #777; }
+  .m-info .v { margin-top: 3px; color: #333; }
+  .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+  .radio-row label { display: flex; align-items: center; gap: 8px; border: 1px solid #ccc; border-radius: 4px; padding: 9px 12px; font-size: 12px; cursor: pointer; }
+  .radio-row label:hover { background: #fafafa; }
+  .field-block label.k { display: block; font-size: 11px; color: #777; margin-bottom: 6px; }
+  textarea { width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 8px 10px; font-size: 12px; font-family: inherit; resize: vertical; }
+  textarea:focus { outline: 1px solid #999; }
+  .toast { display: none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 60;
+           background: #333; color: #fff; padding: 10px 18px; border-radius: 4px; font-size: 12px; }
+  .toast.show { display: block; }
+  @media (max-width: 1280px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .filter-grid { grid-template-columns: repeat(2, 1fr); }
+    .grid-main { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) { .sidebar { display: none; } .kpi-grid, .filter-grid { grid-template-columns: 1fr 1fr; } .m-info-grid, .radio-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">▢</div><div><div class="brand-title">矿井货车倒矿</div><div class="brand-sub">智能管控系统</div></div></div>
+    <nav class="nav">
+      <div class="nav-group">概览</div>
+      <a class="nav-item" href="home.html"><span class="nav-icon"></span>工作台</a>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon"></span>可视化看板</a>
+      <div class="nav-group">业务管控</div>
+      <a class="nav-item" href="recognition.html"><span class="nav-icon"></span>车牌识别计次</a>
+      <a class="nav-item" href="vehicles.html"><span class="nav-icon"></span>车辆定位管控</a>
+      <a class="nav-item active" href="alarms.html"><span class="nav-icon"></span>告警与复核</a>
+      <a class="nav-item" href="statistics.html"><span class="nav-icon"></span>统计与报表</a>
+      <div class="nav-group">终端与项目</div>
+      <a class="nav-item" href="mobile.html"><span class="nav-icon"></span>移动端 H5</a>
+      <a class="nav-item" href="project.html"><span class="nav-icon"></span>项目实施与验收</a>
+    </nav>
+    <div class="sidebar-foot">内网部署 · 演示数据<br/>需求基线草案 V0.9</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="page-title">告警管理与人工复核</div><div class="page-desc">告警分级、复核处置与误报率跟踪</div></div>
+      <div class="topbar-right">
+        <span class="tag">演示数据</span>
+        <div class="user"><div class="avatar">安</div><div><div style="font-size:12px;font-weight:600;">安全监管人员</div><div class="muted">安全监察室</div></div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 指标 -->
+      <section class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">今日告警总数</div><div class="kpi-value">23<small> 条</small></div></div>
+        <div class="kpi"><div class="kpi-label">待复核</div><div class="kpi-value" id="pendingCount">3<small> 条</small></div></div>
+        <div class="kpi"><div class="kpi-label">告警误报率</div><div class="kpi-value">1.7<small>%</small></div><div class="kpi-note">承诺 ≤ 2%（待确认是否强制验收）</div></div>
+        <div class="kpi"><div class="kpi-label">平均复核时长</div><div class="kpi-value">14<small> 秒/条</small></div><div class="kpi-note">承诺 ≤ 20 秒/条</div></div>
+        <div class="kpi"><div class="kpi-label">平均告警时延</div><div class="kpi-value">1.8<small> 秒</small></div><div class="kpi-note">满足考核要求</div></div>
+      </section>
+
+      <!-- 筛选 -->
+      <section class="panel panel-pad">
+        <div class="filter-grid">
+          <div class="field"><label>告警级别</label>
+            <select id="levelSelect">
+              <option value="all">全部级别</option><option value="紧急">紧急</option><option value="重要">重要</option><option value="一般">一般</option>
+            </select>
+          </div>
+          <div class="field"><label>告警类型</label>
+            <select id="typeSelect">
+              <option value="all">全部类型</option>
+              <option value="车辆滞留超时">车辆滞留超时</option>
+              <option value="识别置信度偏低">识别置信度偏低</option>
+              <option value="定位偏差超限">定位偏差超限</option>
+              <option value="点位外停留">点位外停留</option>
+              <option value="车载终端离线">车载终端离线</option>
+            </select>
+          </div>
+          <div class="field"><label>处理状态</label>
+            <select id="stateSelect">
+              <option value="all">全部状态</option><option value="pending">待复核</option><option value="done">已复核</option>
+            </select>
+          </div>
+          <div class="btn-group">
+            <button class="btn solid" id="searchBtn">查询</button>
+            <button class="btn" id="resetBtn">重置</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid-main">
+        <!-- 告警列表 -->
+        <section class="panel" style="overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #eee;">
+            <div>
+              <div class="panel-title">告警列表</div>
+              <div class="panel-sub">共 <span id="rowCount">8</span> 条 · 点击「复核」提交处置结论</div>
+            </div>
+            <span class="muted">复核时限：20 秒/条（演示口径）</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>告警时间</th><th>告警类型</th><th>级别</th><th>涉及车辆</th><th>点位</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="alarmBody">
+                <tr data-level="紧急" data-state="pending" data-type="车辆滞留超时">
+                  <td>16:21:44</td><td>车辆滞留超时</td><td><span class="badge urgent">紧急</span></td><td>豫 C·8F23 挂</td><td>1 号卸矿平台</td>
+                  <td class="status-cell"><span class="badge">待复核</span></td><td><button class="link review-btn">复核</button></td>
+                </tr>
+                <tr data-level="重要" data-state="pending" data-type="识别置信度偏低">
+                  <td>15:47:12</td><td>识别置信度偏低</td><td><span class="badge">重要</span></td><td>豫 C·P771 挂</td><td>2 号计量点</td>
+                  <td class="status-cell"><span class="badge">待复核</span></td><td><button class="link review-btn">复核</button></td>
+                </tr>
+                <tr data-level="一般" data-state="pending" data-type="点位外停留">
+                  <td>15:12:36</td><td>点位外停留</td><td><span class="badge minor">一般</span></td><td>豫 C·A309 挂</td><td>北侧电子围栏</td>
+                  <td class="status-cell"><span class="badge">待复核</span></td><td><button class="link review-btn">复核</button></td>
+                </tr>
+                <tr data-level="重要" data-state="done" data-type="定位偏差超限">
+                  <td>14:58:03</td><td>定位偏差超限</td><td><span class="badge">重要</span></td><td>豫 C·M602 挂</td><td>3 号排土点</td>
+                  <td class="status-cell"><span class="badge done">已复核 · 误报</span></td><td><button class="link muted-link review-btn">查看</button></td>
+                </tr>
+                <tr data-level="重要" data-state="done" data-type="识别置信度偏低">
+                  <td>14:31:20</td><td>识别置信度偏低</td><td><span class="badge">重要</span></td><td>豫 C·H204 挂</td><td>北侧装车点</td>
+                  <td class="status-cell"><span class="badge done">已复核 · 真实告警</span></td><td><button class="link muted-link review-btn">查看</button></td>
+                </tr>
+                <tr data-level="一般" data-state="done" data-type="车载终端离线">
+                  <td>13:52:41</td><td>车载终端离线</td><td><span class="badge minor">一般</span></td><td>豫 C·X088 挂</td><td>—</td>
+                  <td class="status-cell"><span class="badge done">已复核 · 真实告警</span></td><td><button class="link muted-link review-btn">查看</button></td>
+                </tr>
+                <tr data-level="一般" data-state="done" data-type="点位外停留">
+                  <td>13:20:15</td><td>点位外停留</td><td><span class="badge minor">一般</span></td><td>豫 C·T556 挂</td><td>北侧电子围栏</td>
+                  <td class="status-cell"><span class="badge done">已复核 · 误报</span></td><td><button class="link muted-link review-btn">查看</button></td>
+                </tr>
+                <tr data-level="重要" data-state="done" data-type="车辆滞留超时">
+                  <td>12:47:58</td><td>车辆滞留超时</td><td><span class="badge">重要</span></td><td>豫 C·B918 挂</td><td>3 号排土点</td>
+                  <td class="status-cell"><span class="badge done">已复核 · 真实告警</span></td><td><button class="link muted-link review-btn">查看</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 右侧统计 -->
+        <section style="display:flex;flex-direction:column;gap:16px;">
+          <div class="panel panel-pad">
+            <div class="panel-title">告警类型分布</div>
+            <div class="panel-sub">今日 23 条 · 单位：条</div>
+            <div class="chart-ph" style="height:220px;margin-top:10px;">[ 环形图占位 ]<br/>车辆滞留超时 / 识别置信度偏低 / 定位偏差超限 / 点位外停留 / 车载终端离线</div>
+          </div>
+          <div class="panel panel-pad">
+            <div class="panel-title">复核处置规范</div>
+            <ul class="rule-list">
+              <li><span class="mark"></span>紧急告警须在 2 分钟内响应，重要告警 5 分钟内响应。</li>
+              <li><span class="mark"></span>复核结论分为「真实告警」与「误报」，均需填写处置说明。</li>
+              <li><span class="mark"></span>复核记录写入审计日志，保留操作人、时间与结论。</li>
+              <li><span class="mark"></span>误报率与复核时效建议纳入试运行考核，是否强制验收由甲方确认。</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <p class="footnote">告警内容与复核结论为演示数据，用于说明交互流程。</p>
+    </main>
+  </div>
+</div>
+
+<!-- 复核弹窗 -->
+<div class="modal-mask" id="reviewModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="panel-title">告警人工复核</div>
+        <div class="panel-sub"><span id="mType">车辆滞留超时</span> · 告警时间 <span id="mTime">16:21:44</span></div>
+      </div>
+      <button class="btn" id="reviewClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="m-info-grid">
+        <div class="m-info"><div class="k">涉及车辆</div><div class="v" id="mPlate">豫 C·8F23 挂</div></div>
+        <div class="m-info"><div class="k">告警级别</div><div class="v" id="mLevel">紧急</div></div>
+        <div class="m-info"><div class="k">持续时长</div><div class="v">8 分 24 秒</div></div>
+      </div>
+      <div class="field-block">
+        <label class="k">复核结论</label>
+        <div class="radio-row">
+          <label><input type="radio" name="reviewResult" value="true" checked/>真实告警</label>
+          <label><input type="radio" name="reviewResult" value="false"/>误报</label>
+        </div>
+      </div>
+      <div class="field-block">
+        <label class="k">处置说明</label>
+        <textarea id="remarkInput" rows="3" placeholder="请填写现场核实情况、处置措施或误报原因"></textarea>
+      </div>
+      <p class="muted" style="margin:0;">提交后写入审计日志，可在告警列表查看最新状态（演示环境不产生真实数据）。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="reviewCancel">取消</button>
+      <button class="btn solid" id="reviewSubmit">提交复核结论</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  (function () {
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
+    function showToast(msg) {
+      toast.textContent = msg; toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2400);
+    }
+
+    var alarmBody = document.getElementById('alarmBody');
+    var rowCount = document.getElementById('rowCount');
+    var pendingCount = document.getElementById('pendingCount');
+    var levelSelect = document.getElementById('levelSelect');
+    var typeSelect = document.getElementById('typeSelect');
+    var stateSelect = document.getElementById('stateSelect');
+
+    function refresh() {
+      var level = levelSelect.value, type = typeSelect.value, state = stateSelect.value;
+      var rows = alarmBody.querySelectorAll('tr'), visible = 0, pending = 0;
+      rows.forEach(function (row) {
+        var ok = (level === 'all' || row.getAttribute('data-level') === level) &&
+                 (type === 'all' || row.getAttribute('data-type') === type) &&
+                 (state === 'all' || row.getAttribute('data-state') === state);
+        row.classList.toggle('hidden', !ok);
+        if (ok) visible++;
+        if (row.getAttribute('data-state') === 'pending') pending++;
+      });
+      rowCount.textContent = String(visible);
+      pendingCount.innerHTML = String(pending) + '<small> 条</small>';
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', function () {
+      refresh(); showToast('已按筛选条件刷新告警列表（演示）');
+    });
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      levelSelect.value = 'all'; typeSelect.value = 'all'; stateSelect.value = 'all';
+      refresh(); showToast('筛选条件已重置');
+    });
+    levelSelect.addEventListener('change', refresh);
+    typeSelect.addEventListener('change', refresh);
+    stateSelect.addEventListener('change', refresh);
+
+    var reviewModal = document.getElementById('reviewModal');
+    var currentRow = null;
+    var mType = document.getElementById('mType'), mTime = document.getElementById('mTime');
+    var mPlate = document.getElementById('mPlate'), mLevel = document.getElementById('mLevel');
+    var remarkInput = document.getElementById('remarkInput');
+
+    function openReview(row) {
+      currentRow = row;
+      var cells = row.querySelectorAll('td');
+      mTime.textContent = cells[0].textContent.trim();
+      mType.textContent = cells[1].textContent.trim();
+      mLevel.textContent = cells[2].textContent.trim();
+      mPlate.textContent = cells[3].textContent.trim();
+      remarkInput.value = '';
+      reviewModal.classList.add('show');
+    }
+    function closeReview() { reviewModal.classList.remove('show'); currentRow = null; }
+
+    alarmBody.querySelectorAll('.review-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { openReview(this.closest('tr')); });
+    });
+    document.getElementById('reviewClose').addEventListener('click', closeReview);
+    document.getElementById('reviewCancel').addEventListener('click', closeReview);
+    reviewModal.addEventListener('click', function (e) { if (e.target === reviewModal) closeReview(); });
+
+    document.getElementById('reviewSubmit').addEventListener('click', function () {
+      if (!currentRow) return;
+      var checked = document.querySelector('input[name="reviewResult"]:checked');
+      var isTruth = checked && checked.value === 'true';
+      var cell = currentRow.querySelector('.status-cell');
+      var span = document.createElement('span');
+      span.className = isTruth ? 'badge done' : 'badge done';
+      span.textContent = isTruth ? '已复核 · 真实告警' : '已复核 · 误报';
+      cell.innerHTML = ''; cell.appendChild(span);
+      currentRow.setAttribute('data-state', 'done');
+      var btn = currentRow.querySelector('.review-btn');
+      btn.textContent = '查看'; btn.classList.add('muted-link');
+      closeReview(); refresh();
+      showToast('复核结论已提交：' + (isTruth ? '真实告警' : '误报') + '（演示）');
+    });
+
+    refresh();
+  })();
+</script>
+</body>
+</html>

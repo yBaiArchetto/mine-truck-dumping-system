@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[线框] 车辆定位与作业管控 · 矿井货车倒矿智能管控系统</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f7f7f7; color: #333; font-size: 13px; }
+  .layout { display: flex; width: 100%; height: 100%; }
+  .sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #ccc; display: flex; flex-direction: column; }
+  .brand { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #e5e5e5; }
+  .brand-mark { width: 28px; height: 28px; border: 1px solid #999; display: grid; place-items: center; color: #999; font-size: 12px; }
+  .brand-title { font-size: 13px; font-weight: 600; }
+  .brand-sub { font-size: 11px; color: #999; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+  .nav-group { font-size: 11px; color: #999; padding: 10px 10px 4px; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 4px; color: #444; text-decoration: none; font-size: 13px; border: 1px solid transparent; }
+  .nav-item:hover { background: #f0f0f0; }
+  .nav-item.active { border-color: #333; background: #f0f0f0; font-weight: 600; }
+  .nav-icon { width: 14px; height: 14px; border: 1px solid #bbb; }
+  .sidebar-foot { padding: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; line-height: 1.6; }
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { height: 56px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .page-title { font-size: 14px; font-weight: 600; }
+  .page-desc { font-size: 11px; color: #999; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tag { border: 1px solid #ccc; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  .user { display: flex; align-items: center; gap: 8px; padding-left: 12px; border-left: 1px solid #e5e5e5; }
+  .avatar { width: 26px; height: 26px; border: 1px solid #999; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #666; }
+  .content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+  .panel-pad { padding: 16px; }
+  .panel-title { font-size: 13px; font-weight: 600; }
+  .panel-sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .muted { color: #999; font-size: 11px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 14px 16px; }
+  .kpi-label { font-size: 11px; color: #777; display: flex; justify-content: space-between; }
+  .kpi-icon { width: 14px; height: 14px; border: 1px solid #ccc; }
+  .kpi-value { font-size: 24px; font-weight: 600; margin-top: 8px; line-height: 1; }
+  .kpi-value small { font-size: 12px; color: #999; font-weight: normal; }
+  .kpi-note { font-size: 11px; color: #999; margin-top: 8px; }
+  .grid-main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .left-col { display: flex; flex-direction: column; gap: 16px; }
+  /* 地图 */
+  .map-ph { position: relative; height: 330px; border: 1px dashed #bbb; border-radius: 4px; background: #fafafa; overflow: hidden;
+            background-image: linear-gradient(#eee 1px, transparent 1px), linear-gradient(90deg, #eee 1px, transparent 1px);
+            background-size: 28px 28px; }
+  .road-h { position: absolute; left: 18%; right: 14%; top: 50%; height: 3px; background: #d8d8d8; }
+  .road-v1 { position: absolute; left: 18%; top: 24%; bottom: 16%; width: 3px; background: #d8d8d8; }
+  .road-v2 { position: absolute; right: 16%; top: 24%; bottom: 16%; width: 3px; background: #d8d8d8; }
+  .fence { position: absolute; right: 6%; top: 14%; width: 220px; height: 220px; border: 1px dashed #bbb; border-radius: 50%; }
+  .fence-label { position: absolute; right: 22%; top: 11%; font-size: 10px; color: #999; }
+  .site-box { position: absolute; border: 1px solid #ccc; background: #fff; border-radius: 4px; padding: 6px 10px; }
+  .site-box .n { font-size: 11px; color: #444; }
+  .site-box .v { font-size: 10px; color: #999; }
+  .veh-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #666; background: #fff; }
+  .veh-dot.full { background: #666; }
+  .veh-dot.cross { background: #fff; border-style: dashed; }
+  .legend { display: flex; gap: 12px; font-size: 11px; color: #777; }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; }
+  /* 作业流程 */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 18px; }
+  .step .top { display: flex; align-items: center; gap: 8px; }
+  .step .num { width: 26px; height: 26px; border-radius: 50%; border: 1px solid #999; display: grid; place-items: center; font-size: 11px; color: #666; background: #fff; }
+  .step .lbl { font-size: 12px; color: #555; }
+  .step .bar { height: 4px; background: #e5e5e5; border-radius: 2px; margin-top: 8px; }
+  .step.active .num { background: #666; color: #fff; border-color: #666; }
+  .step.active .bar { background: #999; }
+  .step.active .lbl { color: #333; font-weight: 600; }
+  .info-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+  .event-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .event-list li { display: flex; gap: 10px; }
+  .event-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #999; margin-top: 5px; flex-shrink: 0; }
+  .event-dot.done { background: #999; }
+  .event-dot.pending { background: #fff; border-style: dashed; }
+  .event-list .t { font-size: 12px; color: #444; }
+  .event-list .s { font-size: 11px; color: #999; margin-top: 2px; }
+  .event-list .pending-text { color: #999; }
+  .chart-ph { border: 1px dashed #bbb; border-radius: 4px; background: #fafafa; display: grid; place-items: center; color: #aaa; font-size: 12px; text-align: center; padding: 10px; }
+  /* 车辆列表 */
+  .veh-list { list-style: none; margin: 0; padding: 0; flex: 1; overflow-y: auto; }
+  .veh-item { display: block; width: 100%; text-align: left; padding: 12px 20px; border: 0; border-left: 2px solid transparent; border-bottom: 1px solid #eee; background: #fff; cursor: pointer; }
+  .veh-item:hover { background: #fafafa; }
+  .veh-item.active { border-left-color: #333; background: #f4f4f4; }
+  .veh-row { display: flex; justify-content: space-between; align-items: center; }
+  .veh-plate { font-size: 13px; font-weight: 600; color: #333; }
+  .veh-state { font-size: 11px; color: #777; }
+  .veh-sub { font-size: 11px; color: #999; margin-top: 4px; }
+  .veh-warn { color: #555; }
+  .veh-foot { padding: 14px 20px; border-top: 1px solid #eee; background: #fafafa; font-size: 11px; color: #777; line-height: 1.6; }
+  .footnote { font-size: 11px; color: #aaa; padding-bottom: 4px; }
+  @media (max-width: 1280px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .grid-main { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .sidebar { display: none; } .info-2col { grid-template-columns: 1fr; } .steps { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">▢</div><div><div class="brand-title">矿井货车倒矿</div><div class="brand-sub">智能管控系统</div></div></div>
+    <nav class="nav">
+      <div class="nav-group">概览</div>
+      <a class="nav-item" href="home.html"><span class="nav-icon"></span>工作台</a>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon"></span>可视化看板</a>
+      <div class="nav-group">业务管控</div>
+      <a class="nav-item" href="recognition.html"><span class="nav-icon"></span>车牌识别计次</a>
+      <a class="nav-item active" href="vehicles.html"><span class="nav-icon"></span>车辆定位管控</a>
+      <a class="nav-item" href="alarms.html"><span class="nav-icon"></span>告警与复核</a>
+      <a class="nav-item" href="statistics.html"><span class="nav-icon"></span>统计与报表</a>
+      <div class="nav-group">终端与项目</div>
+      <a class="nav-item" href="mobile.html"><span class="nav-icon"></span>移动端 H5</a>
+      <a class="nav-item" href="project.html"><span class="nav-icon"></span>项目实施与验收</a>
+    </nav>
+    <div class="sidebar-foot">内网部署 · 演示数据<br/>需求基线草案 V0.9</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="page-title">车辆定位与作业过程管控</div><div class="page-desc">露天矿区车辆定位、电子围栏与倒矿作业环节跟踪</div></div>
+      <div class="topbar-right">
+        <span class="tag">演示数据</span>
+        <div class="user"><div class="avatar">调</div><div><div style="font-size:12px;font-weight:600;">调度员</div><div class="muted">调度中心</div></div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 定位精度 -->
+      <section class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">平均定位偏差<span class="kpi-icon"></span></div><div class="kpi-value">6.4<small> 米</small></div><div class="kpi-note">合同验收底线 ≤ 10 米</div></div>
+        <div class="kpi"><div class="kpi-label">优于底线占比<span class="kpi-icon"></span></div><div class="kpi-value">97.6<small>%</small></div><div class="kpi-note">超底线车辆 1 台待核查</div></div>
+        <div class="kpi"><div class="kpi-label">在线车辆 / 接入<span class="kpi-icon"></span></div><div class="kpi-value">42<small>/45</small></div><div class="kpi-note">离线 3 台（车载终端待巡检）</div></div>
+        <div class="kpi"><div class="kpi-label">今日作业车辆<span class="kpi-icon"></span></div><div class="kpi-value">38<small> 台</small></div><div class="kpi-note">覆盖 4 个作业点位</div></div>
+      </section>
+
+      <div class="grid-main">
+        <!-- 左：地图 + 流程 -->
+        <section class="left-col">
+          <div class="panel panel-pad">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="panel-title">矿区点位与车辆分布</div>
+                <div class="panel-sub">露天围栏场景示意 · 不表示真实地理坐标</div>
+              </div>
+              <div class="legend">
+                <span><span class="veh-dot full" style="position:static;"></span>作业中</span>
+                <span><span class="veh-dot" style="position:static;"></span>等待</span>
+                <span><span class="veh-dot cross" style="position:static;"></span>超限告警</span>
+              </div>
+            </div>
+            <div class="map-ph" style="margin-top:12px;">
+              <div class="road-h"></div><div class="road-v1"></div><div class="road-v2"></div>
+              <div class="fence"></div><span class="fence-label">北侧电子围栏（露天区）</span>
+              <div class="site-box" style="left:8%;top:14%;"><div class="n">北侧装车点</div><div class="v">平均偏差 7.0 米</div></div>
+              <div class="site-box" style="right:6%;top:42%;"><div class="n">1 号卸矿平台</div><div class="v">平均偏差 5.2 米</div></div>
+              <div class="site-box" style="right:6%;bottom:8%;"><div class="n">2 号计量点</div><div class="v">平均偏差 4.8 米</div></div>
+              <div class="site-box" style="left:8%;bottom:10%;"><div class="n">3 号排土点</div><div class="v">平均偏差 6.9 米</div></div>
+              <span class="veh-dot full" style="left:26%;top:44%;"></span>
+              <span class="veh-dot" style="left:42%;top:50%;"></span>
+              <span class="veh-dot cross" style="right:20%;top:36%;"></span>
+              <span class="veh-dot full" style="right:30%;bottom:28%;"></span>
+              <span class="veh-dot full" style="left:34%;bottom:32%;"></span>
+              <div style="position:absolute;left:12px;bottom:12px;background:#fff;border:1px solid #ddd;border-radius:4px;padding:6px 10px;">
+                <span class="muted">定位数据刷新间隔 5 秒 · 演示数据</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel panel-pad">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="panel-title">作业过程管控</div>
+                <div class="panel-sub">当前车辆：<span id="curPlate" style="color:#333;font-weight:600;">豫 C·8F23 挂</span> · 司机 <span id="curDriver" style="color:#333;">王师傅</span></div>
+              </div>
+              <span class="badge" id="curState" style="font-size:11px;border:1px solid #bbb;border-radius:10px;padding:2px 10px;color:#555;">卸矿作业中</span>
+            </div>
+
+            <div class="steps" id="steps">
+              <div class="step" data-step="0"><div class="top"><span class="num">1</span><span class="lbl">进场登记</span></div><div class="bar"></div></div>
+              <div class="step" data-step="1"><div class="top"><span class="num">2</span><span class="lbl">计量称重</span></div><div class="bar"></div></div>
+              <div class="step" data-step="2"><div class="top"><span class="num">3</span><span class="lbl">卸矿作业</span></div><div class="bar"></div></div>
+              <div class="step" data-step="3"><div class="top"><span class="num">4</span><span class="lbl">离场计次</span></div><div class="bar"></div></div>
+            </div>
+
+            <div class="info-2col">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:#333;">当班轨迹事件</div>
+                <ul class="event-list">
+                  <li><span class="event-dot done"></span><div><div class="t">北门进场 · 车牌识别成功</div><div class="s">16:02:14</div></div></li>
+                  <li><span class="event-dot done"></span><div><div class="t">2 号计量点称重完成 · 净重 39.6 吨</div><div class="s">16:09:38</div></div></li>
+                  <li><span class="event-dot pending"></span><div><div class="t">1 号卸矿平台排队等待 4 分 12 秒</div><div class="s">16:15:02</div></div></li>
+                  <li><span class="event-dot done"></span><div><div class="t">进入卸矿区域 · 开始卸矿</div><div class="s">16:21:44</div></div></li>
+                  <li><span class="event-dot pending"></span><div><div class="t pending-text">离场计次（待完成）</div><div class="s">预计 16:41</div></div></li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:#333;">各点位平均定位偏差</div>
+                <div class="muted" style="margin-top:2px;">单位：米 · 红线为 10 米验收底线</div>
+                <div class="chart-ph" style="height:192px;margin-top:8px;">[ 横向条形图占位 + 10 米参考线 ]<br/>2 号计量点 / 1 号卸矿平台 / 3 号排土点 / 北侧装车点</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 右：车辆列表 -->
+        <section class="panel" style="display:flex;flex-direction:column;overflow:hidden;">
+          <div style="padding:16px 20px;border-bottom:1px solid #eee;">
+            <div class="panel-title">在途车辆</div>
+            <div class="panel-sub">点击车辆查看作业流程与定位详情</div>
+          </div>
+          <ul class="veh-list" id="vehicleList">
+            <li><button class="veh-item active" data-driver="王师傅" data-plate="豫 C·8F23 挂" data-site="1 号卸矿平台" data-state="卸矿作业中" data-step="2">
+              <div class="veh-row"><span class="veh-plate">豫 C·8F23 挂</span><span class="veh-state">作业中</span></div>
+              <div class="veh-sub">王师傅 · 1 号卸矿平台 · 偏差 5.2 米</div>
+              <div class="veh-sub">今日已计次 12 车</div>
+            </button></li>
+            <li><button class="veh-item" data-driver="李师傅" data-plate="豫 C·P771 挂" data-site="2 号计量点" data-state="计量称重" data-step="1">
+              <div class="veh-row"><span class="veh-plate">豫 C·P771 挂</span><span class="veh-state">等待中</span></div>
+              <div class="veh-sub">李师傅 · 2 号计量点 · 偏差 4.8 米</div>
+              <div class="veh-sub">今日已计次 9 车 · 识别待复核</div>
+            </button></li>
+            <li><button class="veh-item" data-driver="赵师傅" data-plate="豫 C·A309 挂" data-site="出口闸机" data-state="已离场" data-step="3">
+              <div class="veh-row"><span class="veh-plate">豫 C·A309 挂</span><span class="veh-state">已离场</span></div>
+              <div class="veh-sub">赵师傅 · 出口闸机 · 偏差 6.1 米</div>
+              <div class="veh-sub">今日已计次 7 车</div>
+            </button></li>
+            <li><button class="veh-item" data-driver="孙师傅" data-plate="豫 C·K118 挂" data-site="北侧装车点" data-state="进场登记" data-step="0">
+              <div class="veh-row"><span class="veh-plate">豫 C·K118 挂</span><span class="veh-state">等待中</span></div>
+              <div class="veh-sub">孙师傅 · 北侧装车点 · 偏差 8.4 米</div>
+              <div class="veh-sub">今日已计次 5 车</div>
+            </button></li>
+            <li><button class="veh-item" data-driver="周师傅" data-plate="豫 C·M602 挂" data-site="3 号排土点" data-state="定位超限" data-step="2">
+              <div class="veh-row"><span class="veh-plate">豫 C·M602 挂</span><span class="veh-state veh-warn">超限告警</span></div>
+              <div class="veh-sub veh-warn">周师傅 · 3 号排土点 · 偏差 12.6 米（超 10 米底线）</div>
+              <div class="veh-sub">今日已计次 4 车</div>
+            </button></li>
+            <li><button class="veh-item" data-driver="吴师傅" data-plate="豫 C·H204 挂" data-site="北侧装车点" data-state="计量称重" data-step="1">
+              <div class="veh-row"><span class="veh-plate">豫 C·H204 挂</span><span class="veh-state">等待中</span></div>
+              <div class="veh-sub">吴师傅 · 北侧装车点 · 偏差 7.0 米</div>
+              <div class="veh-sub">今日已计次 11 车</div>
+            </button></li>
+            <li><button class="veh-item" data-driver="郑师傅" data-plate="豫 C·B918 挂" data-site="3 号排土点" data-state="卸矿作业中" data-step="2">
+              <div class="veh-row"><span class="veh-plate">豫 C·B918 挂</span><span class="veh-state">作业中</span></div>
+              <div class="veh-sub">郑师傅 · 3 号排土点 · 偏差 6.3 米</div>
+              <div class="veh-sub">今日已计次 4 车</div>
+            </button></li>
+          </ul>
+          <div class="veh-foot">井工矿场景本期仅预留接口，暂不实施；定位精度以合同 ≤10 米为验收底线，投标承诺 ≤1 米需明确测试条件后另行确认。</div>
+        </section>
+      </div>
+
+      <p class="footnote">车辆、司机与偏差数值均为原型演示数据，用于说明交互与信息结构。</p>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var items = document.querySelectorAll('.veh-item');
+    var curPlate = document.getElementById('curPlate');
+    var curDriver = document.getElementById('curDriver');
+    var curState = document.getElementById('curState');
+    var steps = document.querySelectorAll('#steps .step');
+
+    function renderSteps(active) {
+      steps.forEach(function (step) {
+        var idx = parseInt(step.getAttribute('data-step'), 10);
+        step.classList.toggle('active', idx <= active);
+      });
+    }
+
+    items.forEach(function (item) {
+      item.addEventListener('click', function () {
+        items.forEach(function (i) { i.classList.remove('active'); });
+        this.classList.add('active');
+        curPlate.textContent = this.getAttribute('data-plate');
+        curDriver.textContent = this.getAttribute('data-driver');
+        curState.textContent = this.getAttribute('data-state');
+        renderSteps(parseInt(this.getAttribute('data-step'), 10));
+      });
+    });
+    renderSteps(2);
+  })();
+</script>
+</body>
+</html>

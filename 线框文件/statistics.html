@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>[线框] 统计查询与报表 · 矿井货车倒矿智能管控系统</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f7f7f7; color: #333; font-size: 13px; }
+  .layout { display: flex; width: 100%; height: 100%; }
+  .sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #ccc; display: flex; flex-direction: column; }
+  .brand { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #e5e5e5; }
+  .brand-mark { width: 28px; height: 28px; border: 1px solid #999; display: grid; place-items: center; color: #999; font-size: 12px; }
+  .brand-title { font-size: 13px; font-weight: 600; }
+  .brand-sub { font-size: 11px; color: #999; }
+  .nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+  .nav-group { font-size: 11px; color: #999; padding: 10px 10px 4px; letter-spacing: 1px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 4px; color: #444; text-decoration: none; font-size: 13px; border: 1px solid transparent; }
+  .nav-item:hover { background: #f0f0f0; }
+  .nav-item.active { border-color: #333; background: #f0f0f0; font-weight: 600; }
+  .nav-icon { width: 14px; height: 14px; border: 1px solid #bbb; }
+  .sidebar-foot { padding: 12px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #999; line-height: 1.6; }
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar { height: 56px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #ccc; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .page-title { font-size: 14px; font-weight: 600; }
+  .page-desc { font-size: 11px; color: #999; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .tag { border: 1px solid #ccc; border-radius: 12px; padding: 2px 10px; font-size: 11px; color: #666; }
+  .user { display: flex; align-items: center; gap: 8px; padding-left: 12px; border-left: 1px solid #e5e5e5; }
+  .avatar { width: 26px; height: 26px; border: 1px solid #999; border-radius: 50%; display: grid; place-items: center; font-size: 11px; color: #666; }
+  .content { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+  .panel-pad { padding: 16px; }
+  .panel-title { font-size: 13px; font-weight: 600; }
+  .panel-sub { font-size: 11px; color: #999; margin-top: 2px; }
+  .muted { color: #999; font-size: 11px; }
+  .seg { display: inline-flex; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+  .seg button { border: 0; background: #fff; padding: 6px 16px; font-size: 12px; cursor: pointer; color: #555; border-right: 1px solid #ccc; }
+  .seg button:last-child { border-right: 0; }
+  .seg button.active { background: #e5e5e5; font-weight: 600; color: #222; }
+  .filter-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+  .field label { display: block; font-size: 11px; color: #777; margin-bottom: 4px; }
+  .field select { border: 1px solid #ccc; border-radius: 4px; padding: 7px 10px; font-size: 12px; background: #fff; min-width: 140px; }
+  .btn { border: 1px solid #999; background: #fff; border-radius: 4px; padding: 7px 14px; font-size: 12px; color: #333; cursor: pointer; }
+  .btn:hover { background: #f0f0f0; }
+  .btn.solid { background: #333; color: #fff; border-color: #333; }
+  .btn.solid:hover { background: #222; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 12px 14px; }
+  .kpi-label { font-size: 11px; color: #777; }
+  .kpi-value { font-size: 22px; font-weight: 600; margin-top: 6px; line-height: 1; }
+  .kpi-value small { font-size: 11px; color: #999; font-weight: normal; }
+  .kpi-note { font-size: 11px; color: #999; margin-top: 6px; }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .chart-ph { border: 1px dashed #bbb; border-radius: 4px; background: #fafafa; display: grid; place-items: center; color: #aaa; font-size: 12px; text-align: center; padding: 10px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { text-align: left; font-weight: normal; color: #777; background: #f4f4f4; padding: 8px 14px; white-space: nowrap; border-bottom: 1px solid #ccc; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #eee; white-space: nowrap; color: #444; }
+  tbody tr:hover { background: #fafafa; }
+  tbody tr.hidden { display: none; }
+  .link { color: #555; text-decoration: underline; cursor: pointer; background: none; border: 0; padding: 0; font-size: 12px; }
+  .footnote { font-size: 11px; color: #aaa; padding-bottom: 4px; }
+  .toast { display: none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 60;
+           background: #333; color: #fff; padding: 10px 18px; border-radius: 4px; font-size: 12px; }
+  .toast.show { display: block; }
+  @media (max-width: 1280px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">▢</div><div><div class="brand-title">矿井货车倒矿</div><div class="brand-sub">智能管控系统</div></div></div>
+    <nav class="nav">
+      <div class="nav-group">概览</div>
+      <a class="nav-item" href="home.html"><span class="nav-icon"></span>工作台</a>
+      <a class="nav-item" href="dashboard.html"><span class="nav-icon"></span>可视化看板</a>
+      <div class="nav-group">业务管控</div>
+      <a class="nav-item" href="recognition.html"><span class="nav-icon"></span>车牌识别计次</a>
+      <a class="nav-item" href="vehicles.html"><span class="nav-icon"></span>车辆定位管控</a>
+      <a class="nav-item" href="alarms.html"><span class="nav-icon"></span>告警与复核</a>
+      <a class="nav-item active" href="statistics.html"><span class="nav-icon"></span>统计与报表</a>
+      <div class="nav-group">终端与项目</div>
+      <a class="nav-item" href="mobile.html"><span class="nav-icon"></span>移动端 H5</a>
+      <a class="nav-item" href="project.html"><span class="nav-icon"></span>项目实施与验收</a>
+    </nav>
+    <div class="sidebar-foot">内网部署 · 演示数据<br/>需求基线草案 V0.9</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div><div class="page-title">统计查询与报表</div><div class="page-desc">多维度作业量统计、班次对比与报表导出</div></div>
+      <div class="topbar-right">
+        <span class="tag">演示数据</span>
+        <div class="user"><div class="avatar">管</div><div><div style="font-size:12px;font-weight:600;">系统管理员</div><div class="muted">调度中心</div></div></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- 周期与筛选 -->
+      <section class="panel panel-pad">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center;">
+          <div class="seg" id="periodSeg">
+            <button class="active" data-period="day">日报</button>
+            <button data-period="week">周报</button>
+            <button data-period="month">月报</button>
+          </div>
+          <div class="filter-row">
+            <div class="field"><label>点位</label><select><option>全部点位</option><option>1 号卸矿平台</option><option>2 号计量点</option><option>3 号排土点</option><option>北侧装车点</option></select></div>
+            <div class="field"><label>班次</label><select><option>全部班次</option><option>白班 08:00-16:00</option><option>中班 16:00-24:00</option><option>夜班 00:00-08:00</option></select></div>
+            <div class="field"><label>车队</label><select><option>全部车队</option><option>一车队</option><option>二车队</option></select></div>
+            <button class="btn solid" id="genBtn">生成统计</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 指标 -->
+      <section class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">期间倒矿车次</div><div class="kpi-value"><span id="kpiTrips">386</span><small> 车</small></div><div class="kpi-note" id="kpiTripsSub">环比前一日 +4.2%</div></div>
+        <div class="kpi"><div class="kpi-label">平均单车作业时长</div><div class="kpi-value"><span id="kpiDuration">26</span><small> 分钟</small></div><div class="kpi-note">含排队等待时间</div></div>
+        <div class="kpi"><div class="kpi-label">平均计量净重</div><div class="kpi-value"><span id="kpiWeight">38.6</span><small> 吨/车</small></div><div class="kpi-note">来源于 2 号计量点</div></div>
+        <div class="kpi"><div class="kpi-label">车辆利用率</div><div class="kpi-value"><span id="kpiUsage">84</span><small>%</small></div><div class="kpi-note">在册 45 台 / 出勤 38 台</div></div>
+      </section>
+
+      <!-- 图表 -->
+      <section class="grid-3">
+        <div class="panel panel-pad">
+          <div class="panel-title" id="trendTitle">各时段倒矿车次（日报）</div>
+          <div class="panel-sub">单位：车次 / 次</div>
+          <div class="chart-ph" style="height:260px;margin-top:12px;">[ 柱状 + 折线图占位 ]<br/>图例：倒矿车次 / 识别量</div>
+        </div>
+        <div class="panel panel-pad">
+          <div class="panel-title">各点位作业量占比</div>
+          <div class="panel-sub">单位：车次</div>
+          <div class="chart-ph" style="height:260px;margin-top:12px;">[ 环形图占位 ]<br/>1 号卸矿平台 / 2 号计量点 / 北侧装车点 / 3 号排土点</div>
+        </div>
+      </section>
+
+      <section class="grid-2">
+        <div class="panel panel-pad">
+          <div class="panel-title">各班次作业量对比</div>
+          <div class="panel-sub">单位：车次 · 白班 08:00-16:00 / 中班 16:00-24:00 / 夜班 00:00-08:00</div>
+          <div class="chart-ph" style="height:240px;margin-top:12px;">[ 分组柱状图占位 ]<br/>白班 / 中班 / 夜班</div>
+        </div>
+        <div class="panel panel-pad">
+          <div class="panel-title">车辆作业量 TOP 10</div>
+          <div class="panel-sub">单位：车次</div>
+          <div class="chart-ph" style="height:240px;margin-top:12px;">[ 横向条形图占位 ]<br/>TOP 10 车辆</div>
+        </div>
+      </section>
+
+      <!-- 报表清单 -->
+      <section class="panel" style="overflow:hidden;">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid #eee;">
+          <div>
+            <div class="panel-title">报表清单</div>
+            <div class="panel-sub">按周期生成统计报表，支持导出留档（演示环境不生成文件）</div>
+          </div>
+          <button class="btn" id="exportAllBtn">批量导出</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>报表名称</th><th>统计周期</th><th>生成时间</th><th>格式</th><th>操作</th></tr></thead>
+            <tbody id="reportBody">
+              <tr data-period="day"><td>倒矿作业日报（全矿）</td><td>2026-10-15</td><td>16:45</td><td>Excel / PDF</td><td><button class="link export-btn">导出</button></td></tr>
+              <tr data-period="day"><td>车牌识别与计次日报</td><td>2026-10-15</td><td>16:45</td><td>Excel</td><td><button class="link export-btn">导出</button></td></tr>
+              <tr data-period="day"><td>告警与复核日报</td><td>2026-10-15</td><td>16:45</td><td>Excel</td><td><button class="link export-btn">导出</button></td></tr>
+              <tr data-period="week" class="hidden"><td>倒矿作业周报（第 42 周）</td><td>2026-10-09 至 10-15</td><td>10-15 17:00</td><td>Excel / PDF</td><td><button class="link export-btn">导出</button></td></tr>
+              <tr data-period="week" class="hidden"><td>车辆定位与超限周报</td><td>2026-10-09 至 10-15</td><td>10-15 17:00</td><td>Excel</td><td><button class="link export-btn">导出</button></td></tr>
+              <tr data-period="month" class="hidden"><td>倒矿作业月报（2026 年 10 月）</td><td>2026-10-01 至 10-31</td><td>10-31 08:00</td><td>Excel / PDF</td><td><button class="link export-btn">导出</button></td></tr>
+              <tr data-period="month" class="hidden"><td>月度绩效与车辆利用率统计</td><td>2026-10-01 至 10-31</td><td>10-31 08:00</td><td>Excel</td><td><button class="link export-btn">导出</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="footnote">本页统计数据为原型演示数据，仅用于说明统计维度与交互方式。</p>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  (function () {
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
+    function showToast(msg) {
+      toast.textContent = msg; toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2400);
+    }
+
+    var periodData = {
+      day:   { title: '各时段倒矿车次（日报）', kpi: { trips: '386', sub: '环比前一日 +4.2%', duration: '26', weight: '38.6', usage: '84' } },
+      week:  { title: '每日倒矿车次（周报）',   kpi: { trips: '2507', sub: '环比上一周 +3.1%', duration: '27', weight: '38.4', usage: '86' } },
+      month: { title: '每周倒矿车次（月报）',   kpi: { trips: '9258', sub: '环比上月 +2.4%', duration: '28', weight: '38.2', usage: '85' } }
+    };
+
+    var reportBody = document.getElementById('reportBody');
+
+    function render(key) {
+      var d = periodData[key];
+      document.getElementById('trendTitle').textContent = d.title;
+      document.getElementById('kpiTrips').textContent = d.kpi.trips;
+      document.getElementById('kpiTripsSub').textContent = d.kpi.sub;
+      document.getElementById('kpiDuration').textContent = d.kpi.duration;
+      document.getElementById('kpiWeight').textContent = d.kpi.weight;
+      document.getElementById('kpiUsage').textContent = d.kpi.usage;
+      reportBody.querySelectorAll('tr').forEach(function (tr) {
+        tr.classList.toggle('hidden', tr.getAttribute('data-period') !== key);
+      });
+    }
+
+    document.querySelectorAll('#periodSeg button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('#periodSeg button').forEach(function (b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        render(this.getAttribute('data-period'));
+      });
+    });
+    render('day');
+
+    document.getElementById('genBtn').addEventListener('click', function () {
+      showToast('统计已按当前筛选条件重新生成（演示）');
+    });
+    document.getElementById('exportAllBtn').addEventListener('click', function () {
+      showToast('演示环境：批量导出仅展示交互，不生成文件');
+    });
+    reportBody.querySelectorAll('.export-btn').forEach(function (b) {
+      b.addEventListener('click', function () { showToast('演示环境：报表导出仅展示交互，不生成文件'); });
+    });
+  })();
+</script>
+</body>
+</html>
